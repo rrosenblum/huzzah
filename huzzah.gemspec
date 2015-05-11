@@ -1,0 +1,29 @@
+# coding: utf-8
+lib = File.expand_path('../lib', __FILE__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+require 'huzzah/version'
+
+Gem::Specification.new do |spec|
+  spec.name = "huzzah"
+  spec.version = Huzzah::VERSION
+  spec.authors = ["Lance Howard"]
+  spec.email = ["lance.howard@manheim.com"]
+  spec.summary = "Huzzah!"
+  spec.description = "Watir-WebDriver Framework for Testing Web Applications"
+  spec.homepage = "http://github.com/Manheim/huzzah"
+  spec.license = "MIT"
+
+  spec.files = `git ls-files`.split($/)
+  spec.executables = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
+  spec.test_files = spec.files.grep(%r{^(test|spec|features)/})
+  spec.require_paths = ["lib"]
+
+  spec.add_development_dependency('bundler', '~> 1.5')
+  spec.add_development_dependency('rspec')
+  spec.add_development_dependency('pry')
+  spec.add_development_dependency('simplecov')
+
+  spec.add_runtime_dependency('watir-webdriver', '0.6.10')
+  spec.add_runtime_dependency('activesupport', ['>= 4.0.0'])
+  spec.post_install_message = "Huzzah!"
+end
