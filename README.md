@@ -94,7 +94,8 @@ load_config :testsite
 
 # Reference data in the site config:
 site_config.url
-# NOTE: The #url method referenced above would return the URL defined in the site's YAML file for the correct environment indicated by your Huzzah.config
+# NOTE: The #url method referenced above would return the URL defined in the 
+site's YAML file for the correct environment indicated by your Huzzah.config.
 ```
 
 # Apps
