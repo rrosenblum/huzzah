@@ -1,12 +1,13 @@
 huzzah
 ======
 
-A Flexible Page-Object Model DSL for Watir-WebDriver
+A Flexible Application Modeling Framework for Watir-WebDriver
 
 Huzzah was designed to help you create better page-object models when
 dealing with complex websites that consist of multiple web applications.
-It really shines when you have web applications that are shared across
-multiple websites.
+It really shines when you have web applications (or components) that are shared across
+multiple websites or when building test scenarios that require mutilple user roles to be 
+interacting through separate browser instances.
 
 Huzzah abstracts your application under test into some basic concepts:
 
@@ -32,15 +33,15 @@ gem 'huzzah'
 # Directory Structure
 
 Your main 'huzzah' directory can exist anywhere within your project. You will 
-configure the path to that directory in your Cucumber env.rb file. The directory
-structure within your main 'huzzah' directory is more rigid. It *must* look
+configure the path to that directory in your Cucumber env.rb or RSpec spec_helper.rb file. 
+The directory structure within your main 'huzzah' directory is more rigid. It *must* look
 like this:
 
 huzzah/apps
 
-huzzah/apps/[app_name]/partials
-
 huzzah/apps/[app_name]/pages
+
+huzzah/apps/[app_name]/partials
 
 huzzah/factories <= optional
 
@@ -52,6 +53,20 @@ huzzah/roles <= optional
 
 huzzah/sites
 
+# Configuration 
+
+Setup your configuration in your Cucumber env.rb or RSpec spec_helper.rb file:
+
+```ruby
+Huzzah.configure do |config|
+  config.path = "<path to your 'huzzah' directory>"
+  config.browser_type = :firefox
+  config.environment = 'dev'
+end
+```
+
+When you configure Huzzah, it will automatically load all of your sites, apps, pages & partials. It will
+also load any files in the optional factories, models & roles directories.
 
 # Sites
 
@@ -304,19 +319,7 @@ admin.bulk_delete_all
 NOTE: You cannot use the same name for a Flow and an App. The framework will
 throw an Huzzah::InvalidFlowNameError. 
   
-# Configuration  
-Setup your configuration in your Cucumber env.rb file:
-
-```ruby
-Huzzah.configure do |config|
-  config.path = "<path to your 'huzzah' directory>"
-  config.browser_type = :firefox
-  config.environment = 'dev'
-end
-```
-
-When you configure Huzzah, it will automatically load all of your sites, apps, pages & partials.
- 
+  
 # User Roles
 A user role represents a single browser session. It is not tied to an particular site. That
 relationship is determined by your test code. This allows you to have multiple users on any site or
@@ -367,6 +370,18 @@ the YAML file will be exposed as methods.
 
 NOTE: If you define your roles through YAML file, do not call _Huzzah.add_role_
 or _Huzzah.add_roles_
+
+# Factories & Models
+
+Huzzah was designed to be used in conjunction with FactoryGirl and ActiveRecord for
+managing test data and otherwise interacting with databases. For more information
+on how to use this tools visit:
+
+FactoryGirl
+http://www.rubydoc.info/gems/factory_girl/file/GETTING_STARTED.md
+
+ActiveRecord
+http://guides.rubyonrails.org/active_record_basics.html
 
 
 # The DSL
