@@ -176,12 +176,12 @@ an instance of and element. By defining methods that perform actions or return v
 you will make your test code a bit more concise and easier to read:
 
 ```ruby
-# Using 'element'
+# Using 'element' style
 sapphire(:home_page).user_username.when_present.set 'joseph'
 sapphire(:home_page).user_password.set 'password'
 sapphire(:home_page).login_button.click
 
-# Using 'action'
+# Using 'action' style
 sapphire(:home_page).set_username 'joseph'
 sapphire(:home_page).set_password 'password'
 sapphire(:home_page).login
@@ -194,7 +194,7 @@ In an effort to eliminate boiler-plate code, the **Huzzah::Page** class also han
 method calls to **Watir::Browser** methods without you having to explicitly reference the 
 browser object. Simply proceed the standard Watir locator methods with an underscore. As in the example above, you can call:
 ```ruby
-_button(id: 'search_button').when_present.click
+button(id: 'search_button').when_present.click
 ```
 instead of:
 ```ruby
@@ -227,20 +227,22 @@ A _partial_ is simply a _page_ that is pulled into another _page_.
 
 Example partial:
 ```ruby
-class Google::Header < Huzzah::Page
+module Google
+  class Header < Huzzah::Page
 
-  let(:gmail) { link(text: 'Gmail') }
+    let(:gmail) { link(text: 'Gmail') }
 
 end  
 ```  
 
 Pull it into the **Google::Search** page:
 ```ruby
-class Google::SearchPage < Huzzah::Page
+module Google
+  class SearchPage < Huzzah::Page
 
-  partial(:header, Google::Header)
+    partial(:header, Google::Header)
 
-  # Elements, etc.
+    # Elements, Actions, etc.
 
 end
 ```
@@ -258,13 +260,12 @@ going through a page:
 google(:header).gmail.click
 ```
 
-Partials can also used across 'apps'. For instance, you can pull the Sapphire header into
-other Manheim applications like Powersearch:
+Partials can also used across 'apps'. This feature is intended to be used when modeling complex web applications. For instance, you can pull the Shared header into other applications:
 ```ruby
-module Powersearch
+module MyApp
   class SearchPage < Huzzah::Page
 
-  partial(:header, Sapphire::Header)
+  partial(:header, Shared::Header)
 
   # Elements, etc.
   
@@ -281,12 +282,12 @@ To define a flow you create a ruby file in your _huzzah/flows_ directory. A meth
 same name as the file (without the .rb extension) will be added to the **Huzzah::DSL** module. 
 That method will return an instance of the _flow_ class.
 
-Example: _manage_workbook.rb_
+Example: _admin.rb_
 
 ```ruby
-class ManageWorkbook < Huzzah::Flow
+class Admin < Huzzah::Flow
 
-  def bulk_delete_all_listings
+  def bulk_delete_all
     # Code to perform bulk delete
   end
   
@@ -296,7 +297,7 @@ end
 You can then call the your flows like this:
    
 ```ruby
-manage_workbook.bulk_delete_all_listings   
+admin.bulk_delete_all   
 ```  
  
 NOTE: You cannot use the same name for a Flow and an App. The framework will
@@ -317,8 +318,8 @@ When you configure Huzzah, it will automatically load all of your sites, apps, p
  
 # User Roles
 A user role represents a single browser session. It is not tied to an particular site. That
-relationship is determined by your tests. This allows you to have multiple users on any site or
-transition users from one site to another.
+relationship is determined by your test code. This allows you to have multiple users on any site or
+the ability to seamlessly transition users from one site to another.
 
 You define your user roles after you configure your Huzzah environment:
 ```ruby
@@ -332,39 +333,39 @@ Huzzah.add_roles :buyer, :seller, :admin
 NOTE: A browser will not be launched until you perform an action with the user.
 
 
-Optionally, you can define your user roles in yml files that contain information
+Optionally, you can define your user roles in YAML files that contain information
 about the roles:
 
 ```ruby
-default_user.yml
+buyer.yml
 
 ---
-qa1:
-  :username: 'cortin'
+qa:
+  :username: 'johndoe'
   :password: 'password'
   :language: 'English'
-  :name: 'Christopher Ayd'
+  :name: 'John Doe'
 prod:
-  :username: 'man3'
+  :username: 'johndoe'
   :password: '276dphr'
   :language: 'English'
-  :name: 'Christopher Ayd'
+  :name: 'John Doe'
 ```
 
 You can store any config information about your user that you wish. The framework
-will define a method (based off of the filename) for the role and the keys of
+will define a method (based on the filename) for the role and the keys of
 the YAML file will be exposed as methods.
 
 ```ruby
-# Given the above YAML file for default_user, you can reference the data this way:
-> default_user.username
-=> 'cortin'
+# Given the above YAML file for buyer, you can reference the data this way:
+> buyer.username
+=> 'johndoe'
 > default_user.name
-=> 'Christopher Ayd'
+=> 'John Doe'
 ```
 
-NOTE: If you define your roles through YAML file, do not call Huzzah.add_role
-or Huzzah.add_roles
+NOTE: If you define your roles through YAML file, do not call _Huzzah.add_role_
+or _Huzzah.add_roles_
 
 
 # The DSL
@@ -372,14 +373,14 @@ or Huzzah.add_roles
 # Switch user roles. Optionally, navigate to a site.
 as :user
 
-as :user, visit: 'manheim' # Calls 'visit' method
-as :user, 'manheim'     # Calls 'visit' method
+as :user, visit: 'google' # Calls 'visit' method
+as :user, 'google'        # Calls 'visit' method
 
 # Launch a browser to the env specified in the config for the specified site. 
-visit :manheim 
+visit :google 
 
 # Load a site config without launching a browser.
-load_config :manheim
+load_config :google
 
 # Return an OpenStruct of the site config yaml.
 site_config
@@ -418,7 +419,7 @@ end
 ```
 The block functionality is most useful when you are performing multiple actions
 on the page, but you may want to consider just creating a method in the page class
-if the series of actions may be reused.
+if the series of actions can be reused.
 
 In addition, the DSL also wraps many of the methods in the Watir::Browser class,
 allowing you to call those methods directly:
