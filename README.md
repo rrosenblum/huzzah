@@ -120,7 +120,8 @@ google('search_page')
 In Huzzah, **Pages** and **Partials** are defined the same way:
   
 ```ruby
-class Google::SearchPage < Huzzah::Page
+module Google
+  class SearchPage < Huzzah::Page
 
   # define Methods here.
 
@@ -154,7 +155,7 @@ to perform multiple actions or complex logic, you can simply define methods with
 the page class:
 
 ```ruby
-module Sapphire
+module MyApp
   class HomePage < Huzzah::Page
 
     let(:set_username)  { |username| text_field(id: "user_username").when_present.set username }
@@ -177,14 +178,14 @@ you will make your test code a bit more concise and easier to read:
 
 ```ruby
 # Using 'element' style
-sapphire(:home_page).user_username.when_present.set 'joseph'
-sapphire(:home_page).user_password.set 'password'
-sapphire(:home_page).login_button.click
+my_app(:home_page).user_username.when_present.set 'joseph'
+my_app(:home_page).user_password.set 'password'
+my_app(:home_page).login_button.click
 
 # Using 'action' style
-sapphire(:home_page).set_username 'joseph'
-sapphire(:home_page).set_password 'password'
-sapphire(:home_page).login
+my_app(:home_page).set_username 'joseph'
+my_app(:home_page).set_password 'password'
+my_app(:home_page).login
 ```
 
   
