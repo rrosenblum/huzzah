@@ -16,7 +16,7 @@ Huzzah abstracts your application under test into some basic concepts:
 * **Apps** have _Pages_ 
 * **Pages** have _Methods_ and _Partials_
 * **Partials** have _Methods_  
-* **Flows** define user flows through your _Sites_ & _Apps_
+* **Flows** define user interactions across your _Sites_ & _Apps_
 
 # Using Huzzah
 
@@ -32,7 +32,7 @@ gem 'huzzah'
 
 # Directory Structure
 
-Your main 'huzzah' directory can exist anywhere within your project. You will 
+Your main 'huzzah' directory can be named anything you wish and can exist anywhere within your project. You will 
 configure the path to that directory in your Cucumber env.rb or RSpec spec_helper.rb file. 
 The directory structure within your main 'huzzah' directory is more rigid. It *must* look
 like this:
@@ -70,7 +70,7 @@ also load any files in the optional factories, models & roles directories.
 
 # Sites
 
-A **Site** is defined by a YAML file inside the _sites_ directory.
+A **Site** is defined by a YAML file inside the _sites_ directory. It is nothing more than configuration information about the application under test. At a minimum it must contain the URLs for each environment you will be running your tests against. It can also contain other information that may be specific to each environment (e.g. database connection information).
 
 Example: _testsite.yml_
 ```ruby
@@ -94,13 +94,14 @@ load_config :testsite
 
 # Reference data in the site config:
 site_config.url
+# NOTE: The #url method referenced above would return the URL defined in the site's YAML file for the correct environment indicated by your Huzzah.config
 ```
 
 # Apps
 
 When you define an **App** in Huzzah, it is not tied to any particular _site_. This allows 
-you to easily model sites that have shared web applications. For instance: The 'workbook' app 
-can be shared between site 'manheim' and 'ove' with no code duplication! 
+you to easily model sites that have shared web applications. For example, you may have a search
+engine that is shared across multiple web site.
 
 If you are working with a standalone website, you may only have one _app_ that defines 
 your page-objects. But, even if your site doesn't have shared applications, you can use 
@@ -142,13 +143,16 @@ module Google
 
 end
 ```  
-  
+NOTE: You should namespace your page-objects based on the name of your apps directory. For example, if you have an app named _goggle_, you should namespace it _module Google_ as in the example above.
+
+
 # Page Methods
 
-The **Huzzah::Page** class provides a _let_ method that provides a simple, yet flexible, 
-interface for defining methods that interact with the DOM. The _let_ method takes two 
-arguments: a name and a block of Watir-WebDriver code. The first argument is used to 
-dynamically define a method with that name that will execute the code provided in the block.
+The **Huzzah::Page** class provides a #let method that provides a simple, yet flexible, 
+interface for defining methods that interact with the DOM. The #let method takes two 
+arguments: a name and a block of Watir-WebDriver code (this syntax should be familiar to those using 
+RSpec). The first argument is used to dynamically define a method with that name that will execute the 
+code provided in the block.
   
 Usage examples:
   
@@ -165,7 +169,7 @@ module Google
 end
 ```  
   
-The _let_ method is intended to be used for short one-liner methods. If you need
+The #let method is intended to be used for short one-liner methods. If you need
 to perform multiple actions or complex logic, you can simply define methods within 
 the page class:
 
@@ -173,8 +177,8 @@ the page class:
 module MyApp
   class HomePage < Huzzah::Page
 
-    let(:set_username)  { |username| text_field(id: "user_username").when_present.set username }
-    let(:set_password)  { |password| text_field(id: "user_password").when_present.set password }
+    let(:set_username)  { |username| text_field(id: "username").when_present.set username }
+    let(:set_password)  { |password| text_field(id: "password").when_present.set password }
     let(:login)         { button(value: "Login").click }
 
     def login_as(username, password)
@@ -187,28 +191,40 @@ module MyApp
 end
 ```
   
-When defining _let_ methods, consider whether or not you actually need to return
-an instance of and element. By defining methods that perform actions or return values, 
-you will make your test code a bit more concise and easier to read:
+When defining #let methods, consider whether or not you actually need to return
+an instance of an element. 
 
 ```ruby
-# Using 'element' style
+# Using 'element' style. The #let statements are just locators.
 my_app(:home_page).user_username.when_present.set 'joseph'
 my_app(:home_page).user_password.set 'password'
 my_app(:home_page).login_button.click
 
-# Using 'action' style
+# Using 'action' style. The #let statements include locators and actions.
 my_app(:home_page).set_username 'joseph'
 my_app(:home_page).set_password 'password'
 my_app(:home_page).login
 ```
 
+You may also scope element locators within your #let statements:
+
+```ruby
+module MyApp
+  class HomePage < Huzzah::Page
+
+    let(:login_form)    { form(name: 'login') }
+    let(:set_username)  { |username| login_form.text_field(id: "username").when_present.set username }
+    
+  end
+end
+```
   
 # Page Wrappers
   
 In an effort to eliminate boiler-plate code, the **Huzzah::Page** class also handles 
 method calls to **Watir::Browser** methods without you having to explicitly reference the 
-browser object. Simply proceed the standard Watir locator methods with an underscore. As in the example above, you can call:
+browser object. As in the example above, you can call:
+
 ```ruby
 button(id: 'search_button').when_present.click
 ```
@@ -229,7 +245,7 @@ The **Huzzah::Page** class also contains a few convenience methods:
 has_text?(text) 
 google(:search_page).has_text? 'Foo'
 
-# Alias for has_text? Meant to be used within page class for better readability.
+# Alias for #has_text? Meant to be used within page class for better readability.
 page_has_text?(text) 
 
 # Waits for ajax calls to complete. Currently only works with jQuery.
@@ -262,7 +278,7 @@ module Google
 
 end
 ```
-The _partial_ method takes two arguments: a name and class. The name is used to define a
+The #partial method takes two arguments: a name and class. The name is used to define a
 method on the page that creates a new instance of the partial class.
 
 You can reference the _partial_:
@@ -303,8 +319,8 @@ Example: _admin.rb_
 ```ruby
 class Admin < Huzzah::Flow
 
-  def bulk_delete_all
-    # Code to perform bulk delete
+  def delete_user(user)
+    # Code to perform the delete
   end
   
 end
@@ -313,7 +329,7 @@ end
 You can then call the your flows like this:
    
 ```ruby
-admin.bulk_delete_all   
+admin.delete_user 'johndoe'   
 ```  
  
 NOTE: You cannot use the same name for a Flow and an App. The framework will
@@ -321,9 +337,8 @@ throw an Huzzah::InvalidFlowNameError.
   
   
 # User Roles
-A user role represents a single browser session. It is not tied to an particular site. That
-relationship is determined by your test code. This allows you to have multiple users on any site or
-the ability to seamlessly transition users from one site to another.
+A user role represents a single browser session. The browser is tied to a role, not to an particular site. The
+relationship between the browser instance and the site being visited is determined by your test code. This allows you to have multiple users on any site or the ability to seamlessly transition users from one site to another.
 
 You define your user roles after you configure your Huzzah environment:
 ```ruby
@@ -335,7 +350,6 @@ Huzzah.add_roles :buyer, :seller, :admin
 ```
 
 NOTE: A browser will not be launched until you perform an action with the user.
-
 
 Optionally, you can define your user roles in YAML files that contain information
 about the roles:
@@ -357,19 +371,19 @@ prod:
 ```
 
 You can store any config information about your user that you wish. The framework
-will define a method (based on the filename) for the role and the keys of
-the YAML file will be exposed as methods.
+will define a method (based on the filename) for the role. The keys of
+the YAML file will be exposed as methods through an OpenStruct object.
 
 ```ruby
 # Given the above YAML file for buyer, you can reference the data this way:
 > buyer.username
 => 'johndoe'
-> default_user.name
+> buyer.name
 => 'John Doe'
 ```
 
 NOTE: If you define your roles through YAML file, do not call _Huzzah.add_role_
-or _Huzzah.add_roles_
+or _Huzzah.add_roles_.
 
 # Factories & Models
 
@@ -383,6 +397,7 @@ http://www.rubydoc.info/gems/factory_girl/file/GETTING_STARTED.md
 ActiveRecord
 http://guides.rubyonrails.org/active_record_basics.html
 
+Huzzah will automatically require any files within the optional _factories_ & _models_ directories.
 
 # The DSL
 ```ruby
@@ -469,7 +484,7 @@ Huzzah.configure do |config|
 end
 ```
 
-If you want to run your tests remotely on the Selenium Grid, you will need to do
+If you want to run your tests remotely on a Selenium Grid, you will need to do
 some additional configuration. The example below shows how to run remotely using Chrome.
 
 
