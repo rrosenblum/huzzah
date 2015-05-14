@@ -505,3 +505,6 @@ Huzzah.config.internet_explorer(:version => '9', :platform => 'windows')
 Huzzah.config.firefox(:firefox_profile => profile, :version => '24',
                       :platform => 'linux')
 ```
+## Authors
+* Lance Howard https://github.com/lkhoward
+* Kevin Smith https://github.com/ksmithbaylor
