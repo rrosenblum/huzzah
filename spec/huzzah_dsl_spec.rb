@@ -59,5 +59,13 @@ describe Huzzah, 'DSL' do
     expect(site_config.url).to eql 'http://dreamcars-manheim.rhcloud.com'
   end
 
+  it "should allow block to access page elements without argument" do
+    Huzzah.add_role :user
+    as :user, on: "dreamcars"
+    dreamcars(:home_page) do
+      select_location "Manheim Las Vegas"
+    end
+    expect(dreamcars(:home_page).select_list(id: "location").selected_option).to eql "Manheim Las Vegas"
+  end
 
 end

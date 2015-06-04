@@ -249,7 +249,7 @@ module Huzzah
       end
       page = Huzzah.pages[page_class]
       page.browser = Huzzah.current_session.browser
-      block.call page if block
+      page.instance_eval(&block) if block_given?
       page
     end
 
