@@ -24,8 +24,14 @@ describe Huzzah, 'Page' do
   end
 
   it "should not allow duplicate 'let' methods" do
-    expect { Testapp::HomePage.let(:main) { div(id: 'main') }
-      }.to raise_error Huzzah::DuplicateElementMethodError, 'main'
+    expect { Testapp::HomePage.let(:main_div) { div(id: 'main') }
+      }.to raise_error Huzzah::DuplicateElementMethodError, 'main_div'
+  end
+
+  it "should not allow 'let' method name from the Watir::Container module" do
+    expect { Testapp::HomePage.let(:table) { div(id: 'main') }
+    }.to raise_error Huzzah::RestrictedMethodNameError,
+                     "You cannot use method names like 'table' from the Watir::Container module in 'let' statements"
   end
 
   it 'should initialize browser' do

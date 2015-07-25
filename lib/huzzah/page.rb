@@ -48,15 +48,18 @@ module Huzzah
     # a partial page class.
     #
     #    partial :partial_name, Partial::Class
-    #    partial :header, Sapphire::Header
+    #    partial :header, Google::Header
     #
     def self.partial(method_name, partial_class)
-      validate_method_name method_name
+      validate_method_name method_name, false
 
       define_method method_name.to_s do
-        partial = partial_class.new
-        partial.browser = Huzzah.current_session.browser
-        yield partial if block_given?
+        if Huzzah.pages[partial_class.to_s].nil?
+          Huzzah.pages[partial_class.to_s] = partial_class.new
+        end
+        partial = Huzzah.pages[partial_class.to_s]
+        partial.browser = Huzzah.active_role.session.driver
+        partial.instance_eval(&block) if block_given?
         partial
       end
     end
@@ -75,11 +78,15 @@ module Huzzah
       # Ensures that the let and partial methods do not attempt to create
       # duplicate methods.
       #
-      def validate_method_name(name)
+      def validate_method_name(name, restrict=true)
         if defined_methods.include? name
-          raise Huzzah::DuplicateElementMethodError, name
+          fail Huzzah::DuplicateElementMethodError, name
+        elsif restrict and Watir::Container.instance_methods.include? name
+          fail Huzzah::RestrictedMethodNameError,
+               "You cannot use method names like '#{name}' from the Watir::Container module in 'let' statements"
+        else
+          defined_methods << name
         end
-        defined_methods << name
       end
 
     end
@@ -133,7 +140,30 @@ module Huzzah
       element
     end
 
-    # Send #p methods call to the browser, not Kernel
+    def_delegators :browser, :add_checker
+    def_delegators :browser, :alert
+    def_delegators :browser, :back
+    def_delegators :browser, :cookies
+    def_delegators :browser, :disable_checker
+    def_delegators :browser, :execute_script
+    def_delegators :browser, :exist?
+    def_delegators :browser, :forward
+    def_delegators :browser, :goto
+    def_delegators :browser, :html
+    def_delegators :browser, :name
+    def_delegators :browser, :ready_state
+    def_delegators :browser, :refresh
+    def_delegators :browser, :run_checkers
+    def_delegators :browser, :screenshot
+    def_delegators :browser, :send_keys
+    def_delegators :browser, :status
+    def_delegators :browser, :text
+    def_delegators :browser, :title
+    def_delegators :browser, :without_checkers
+    def_delegators :browser, :confirm
+    def_delegators :browser, :prompt
+    def_delegators :browser, :window
+    def_delegators :browser, :windows
     def_delegators :browser, :p
 
   end

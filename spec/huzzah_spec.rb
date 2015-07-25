@@ -31,27 +31,30 @@ describe Huzzah do
   it "should define a user role" do
     Huzzah.add_role :user
     Huzzah.add_role 'seller'
-    expect(Huzzah.sessions.keys).to eql [:user, :seller]
+    expect(Huzzah.roles.keys).to eql [:user, :seller]
   end
 
   it "should define multiple user roles" do
     Huzzah.add_roles :user, 'buyer', :seller, :admin
-    expect(Huzzah.sessions.keys.sort).to eql [:admin, :buyer, :seller,:user]
+    expect(Huzzah.roles.keys.sort).to eql [:admin, :buyer, :seller,:user]
   end
 
   it "should raise error if user role is already defined" do
-    expect { Huzzah.add_roles :buyer, :seller, :buyer }.to raise_error Huzzah::RoleAlreadyDefinedError, 'buyer'
+    expect { Huzzah.add_roles :buyer, :seller, :buyer
+      }.to raise_error Huzzah::DuplicateMethodNameError,
+                       'buyer is already defined!'
   end
 
   it "should know the current user role" do
     Huzzah.add_role :user
-    expect(Huzzah.current_role).to eql :user
+    expect(Huzzah.active_role.name).to eql :user
+    expect(Huzzah.current_role.name).to eql :user
   end
 
   it "should switch the current user role" do
     Huzzah.add_roles :buyer, :seller
     as :buyer
-    expect(Huzzah.current_role).to eql :buyer
+    expect(Huzzah.active_role.name).to eql :buyer
   end
 
   it "should load partials" do
@@ -70,8 +73,7 @@ describe Huzzah do
   end
 
   it "allow for custom browser driver" do
-    Huzzah.config.grid_url = 'http://my.gridhub.server:9000/wd/hub'
-    Huzzah.config.remote = true
+    Huzzah.config.grid_url = File.readlines('grid.txt').first
     Huzzah.config.chrome(:switches => ["%w[--ignore-certificate-errors]"],
                           :version => '21', :platform => 'linux')
 

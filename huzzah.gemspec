@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.authors = ["Lance Howard"]
   spec.email = ["lance.howard@manheim.com"]
   spec.summary = "Huzzah!"
-  spec.description = "Watir-WebDriver Framework for Testing Web Applications"
+  spec.description = "Application Modeling Framework for Test Automation"
   spec.homepage = "http://github.com/Manheim/huzzah"
   spec.license = "MIT"
 
@@ -25,6 +25,8 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency('rake', '~> 10.4.0')
 
   spec.add_runtime_dependency('watir-webdriver', '0.6.10')
-  spec.add_runtime_dependency('activesupport', ['>= 4.0.0'])
+  spec.add_runtime_dependency('appium_lib', '7.0.0')
+  spec.add_runtime_dependency('activesupport', '4.2.2')
   spec.post_install_message = "Huzzah!"
+
 end

@@ -4,3 +4,4 @@ coverage/*
 *.gem
 report.html*.swp
 *.swo
+grid.txt

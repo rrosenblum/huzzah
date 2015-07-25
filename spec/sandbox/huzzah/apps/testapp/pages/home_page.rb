@@ -5,7 +5,7 @@ module Testapp
 
     partial(:header, Testapp::Header)
 
-    let(:main)        { div(id: 'main') }
+    let(:main_div)    { div(id: 'main') }
     let(:main_title)  { span(class: 'title').text }
 
   end
