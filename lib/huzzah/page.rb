@@ -6,6 +6,7 @@ module Huzzah
 
     attr_accessor :browser
 
+
     def framed_element(type, locator)
       find_element_in_all_frames browser, type, locator
     end
@@ -28,43 +29,47 @@ module Huzzah
       browser.wait_until { browser.execute_script("return jQuery.active") == 0 }
     end
 
-    ##
-    # Defines a method with the given name that return a page element, act upon
-    # a page element or perform some other action.
-    #
-    #   let(:method_name) { block }
-    #   let(:login) { button(id: 'login').click }
-    #
-    def self.let(method_name, &block)
-      validate_method_name method_name
-
-      define_method method_name.to_s do |*args|
-        self.instance_exec *args, &block
-      end
-    end
-
-    ##
-    # Defines a method with the given name that returns an instance of
-    # a partial page class.
-    #
-    #    partial :partial_name, Partial::Class
-    #    partial :header, Google::Header
-    #
-    def self.partial(method_name, partial_class)
-      validate_method_name method_name, false
-
-      define_method method_name.to_s do
-        if Huzzah.pages[partial_class.to_s].nil?
-          Huzzah.pages[partial_class.to_s] = partial_class.new
-        end
-        partial = Huzzah.pages[partial_class.to_s]
-        partial.browser = Huzzah.active_role.session.driver
-        partial.instance_eval(&block) if block_given?
-        partial
-      end
-    end
 
     class << self
+
+      ##
+      # Defines a method with the given name that return a page element, act upon
+      # a page element or perform some other action.
+      #
+      #   let(:method_name) { block }
+      #   let(:login) { button(id: 'login').click }
+      #
+      def let(method_name, &block)
+        validate_method_name method_name
+
+        define_method method_name.to_s do |*args|
+          self.instance_exec *args, &block
+        end
+      end
+      alias_method :locator, :let
+      alias_method :action, :let
+      alias_method :value, :let
+
+      ##
+      # Defines a method with the given name that returns an instance of
+      # a partial page class.
+      #
+      #    partial :partial_name, Partial::Class
+      #    partial :header, Google::Header
+      #
+      def partial(method_name, partial_class)
+        validate_method_name method_name, false
+
+        define_method method_name.to_s do
+          if Huzzah.pages[partial_class.to_s].nil?
+            Huzzah.pages[partial_class.to_s] = partial_class.new
+          end
+          partial = Huzzah.pages[partial_class.to_s]
+          partial.browser = Huzzah.active_role.session.driver
+          partial.instance_eval(&block) if block_given?
+          partial
+        end
+      end
 
       ##
       # Returns an array of method names that have been created by the
@@ -75,8 +80,7 @@ module Huzzah
       end
 
       ##
-      # Ensures that the let and partial methods do not attempt to create
-      # duplicate methods.
+      # Prevents duplicate dynamically defined methods.
       #
       def validate_method_name(name, restrict=true)
         if defined_methods.include? name
@@ -101,7 +105,7 @@ module Huzzah
     #    browser.text_field(id: 'username')
     #
     def method_missing(method_name, *args, &block)
-      raise Huzzah::BrowserNotInitializedError if @browser.nil?
+      fail Huzzah::BrowserNotInitializedError if @browser.nil?
 
       if method_name.to_s.start_with? '_'
         warn "DEPRECATION WARNING: You no longer nee to proceed locator methods with an underscore. Just call #{method_name.to_s[1..-1]} instead of #{method_name}"
@@ -109,7 +113,7 @@ module Huzzah
       elsif @browser.methods.include? method_name
         find_element_in_all_frames(@browser, method_name.to_sym, *args, &block)
       else
-        raise Huzzah::NoMethodError, "#{method_name} undefined in #{self.class}"
+        fail Huzzah::NoMethodError, "Method '#{method_name}' undefined in #{self.class}"
       end
     end
 

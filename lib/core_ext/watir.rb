@@ -1,13 +1,5 @@
 module Watir
 
-  class Element
-
-    def onclick
-      self.attribute_value("onclick")
-    end
-
-  end
-
   class Select
 
     def selected_option

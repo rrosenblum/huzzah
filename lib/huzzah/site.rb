@@ -14,7 +14,7 @@ module Huzzah
         @data.send method_name
       else
         fail Huzzah::NoMethodError,
-             "#{method_name} undefined for #{name} site."
+             "Method '#{method_name}' undefined for #{name} site."
       end
     end
 

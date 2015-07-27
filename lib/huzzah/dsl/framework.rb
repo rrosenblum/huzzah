@@ -8,7 +8,7 @@ module Huzzah
       # @return [Watir::Browser] The browser instance for the current user session.
       #
       def browser
-        Huzzah.active_role.driver
+        Huzzah.active_role.session.driver
       end
 
       ##
@@ -76,12 +76,8 @@ module Huzzah
       ##
       # Returns the underlying Selenium driver
       #
-      def driver(type=:web)
-        if type.eql? :web
-          Huzzah.active_role.session.driver
-        else # Appium Driver
-          $driver.driver
-        end
+      def driver
+        Huzzah.active_role.session.driver
       end
 
       ##
@@ -139,6 +135,18 @@ module Huzzah
         else
           site.to_sym
         end
+      end
+
+      def screenshot
+        driver.screenshot
+      end
+
+      def execute_script(script, *args)
+        driver.execute_script script, *args
+      end
+
+      def wait_until(timeout=30, &block)
+        driver.wait_until timeout, &block
       end
 
     end

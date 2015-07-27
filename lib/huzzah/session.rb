@@ -3,16 +3,12 @@ module Huzzah
 
     attr_accessor :driver, :driver_type, :site, :site_data
 
+    ##
+    # Create a new Session and default the driver type to
+    # :web (in preparation for mobile support)
+    #
     def initialize(driver_type=:web)
       @driver_type = driver_type
-    end
-
-    def load_site(name, navigate=false)
-      @site = name
-      @site_data = Huzzah.sites[@site]
-      if navigate and @driver_type.eql? :web
-        @driver.goto site_data.url
-      end
     end
 
     ##
@@ -23,11 +19,19 @@ module Huzzah
     #
     def start
       unless @driver
-        if @driver_type.eql? :web
-          remote ? start_watir_remotely : start_watir_locally
-        else
-          start_appium_locally
-        end
+        remote ? start_watir_remotely : start_watir_locally
+      end
+    end
+
+    ##
+    # Loads the Site information. If navigate is true, it will url for the
+    # environment specified in Huzzah::Config.environment.
+    #
+    def load_site(name, navigate=false)
+      @site = name
+      @site_data = Huzzah.sites[@site]
+      if navigate and @driver_type.eql? :web
+        @driver.goto site_data.url
       end
     end
 
@@ -40,20 +44,16 @@ module Huzzah
       if @driver.is_a? Watir::Browser
         @driver.alert.close if @driver.alert.exists?
         @driver.cookies.clear
-        @driver.goto("about:blank")
+        @driver.goto 'about:blank'
       end
     end
 
     ##
-    # Closes the browser (web) or kills the mobile driver (appium).
+    # Closes the browser.
     #
     def quit
       unless @driver.nil?
-        if @driver.is_a? Watir::Browser
-          @driver.close
-        else
-          @driver.driver_quit
-        end
+        @driver.close
       end
       @driver = nil
     end
@@ -72,13 +72,9 @@ module Huzzah
       Huzzah.config.browser_type
     end
 
-    def capabilities
-      Huzzah.config.capabilities
-    end
-
-    def mobile_capabilities
-      Huzzah.config.mobile_capabilities
-    end
+    # def capabilities
+    #   Huzzah.config.capabilities
+    # end
 
     def start_watir_locally
       fail Huzzah::BrowserTypeNotDefinedError if browser_type.nil?
@@ -88,12 +84,6 @@ module Huzzah
     def start_watir_remotely
       fail Huzzah::GridConfigNotDefinedError if grid_url.nil?
       @driver = Watir::Browser.new :remote, Huzzah.config.grid
-    end
-
-    def start_appium_locally
-      $driver = Appium::Driver.new mobile_capabilities
-      $driver.start_driver
-      @driver = $driver
     end
 
   end

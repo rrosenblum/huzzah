@@ -5,81 +5,67 @@ describe Huzzah do
   include Huzzah::DSL
 
   before(:each) do
-    Huzzah.reset!
-    Huzzah.configure do |config|
-      config.path = "#{$PROJECT_ROOT}/sandbox/huzzah"
-      config.browser_type = :firefox
-      config.environment = 'dev'
-    end
+    configure_test_site
   end
 
   after(:each) do
     close_all_browsers
   end
 
-  it "should return the configuration" do
-    expect(Huzzah.configuration[:path]).to include '/huzzah/spec/sandbox/huzzah'
+  it 'returns the configuration' do
+    expect(Huzzah.configuration[:path]).to include '/huzzah/spec/examples/test_site'
     expect(Huzzah.configuration[:browser_type]).to eql :firefox
-    expect(Huzzah.configuration[:environment]).to eql 'dev'
+    expect(Huzzah.configuration[:environment]).to eql 'local'
   end
 
-  it "should load site configs" do
-    expect(Huzzah.sites.keys.sort).to eql [:dreamcars, :testsite]
-    expect(Huzzah.sites[:testsite].url).to eql 'index.html'
+  it 'loads site configs' do
+    expect(Huzzah.sites.keys.sort).to eql [:test_site]
+    expect(Huzzah.sites[:test_site].url).to include 'index.html'
   end
 
-  it "should define a user role" do
-    Huzzah.add_role :user
+  it 'defines user roles manually' do
+    Huzzah.add_role :buyer
     Huzzah.add_role 'seller'
-    expect(Huzzah.roles.keys).to eql [:user, :seller]
+    expect(Huzzah.roles[:buyer]).to be_kind_of Huzzah::Role
+    expect(Huzzah.roles[:seller]).to be_kind_of Huzzah::Role
   end
 
-  it "should define multiple user roles" do
+  it 'defines a user roles from yml files' do
+    expect(Huzzah.roles.keys).to include :user1
+    expect(Huzzah.roles.keys).to include :user2
+  end
+
+  it 'defines multiple user roles' do
     Huzzah.add_roles :user, 'buyer', :seller, :admin
-    expect(Huzzah.roles.keys.sort).to eql [:admin, :buyer, :seller,:user]
+    expect(Huzzah.roles.keys).to include :admin
   end
 
-  it "should raise error if user role is already defined" do
+  it 'raises error if user role is already defined' do
     expect { Huzzah.add_roles :buyer, :seller, :buyer
       }.to raise_error Huzzah::DuplicateMethodNameError,
-                       'buyer is already defined!'
+                       "'buyer' is already defined!"
   end
 
-  it "should know the current user role" do
-    Huzzah.add_role :user
-    expect(Huzzah.active_role.name).to eql :user
-    expect(Huzzah.current_role.name).to eql :user
+  it 'knows the current user role' do
+    expect(Huzzah.active_role.name).to eql :user3
   end
 
-  it "should switch the current user role" do
-    Huzzah.add_roles :buyer, :seller
-    as :buyer
-    expect(Huzzah.active_role.name).to eql :buyer
+  it 'switches the current user role' do
+    as :user2
+    expect(Huzzah.active_role.name).to eql :user2
   end
 
-  it "should load partials" do
-    expect(Huzzah.pages).to have_key 'Dreamcars::Header'
-    expect(Huzzah.pages).to have_key 'Testapp::Header'
+  it 'load partials' do
+    expect(Huzzah.pages).to have_key 'TestSite::Footer'
   end
 
-  it "should load pages" do
-    expect(Huzzah.pages).to have_key 'Dreamcars::HomePage'
-    expect(Huzzah.pages).to have_key 'Testapp::HomePage'
+  it 'load pages' do
+    expect(Huzzah.pages).to have_key 'TestSite::Home'
   end
 
-  it "should define DSL methods to return pages" do
-    expect(Huzzah::DSL.instance_methods).to include :dreamcars
-    expect(Huzzah::DSL.instance_methods).to include :testapp
+  it 'defines DSL methods to return pages' do
+    expect(Huzzah::DSL.instance_methods).to include :test_site
   end
 
-  it "allow for custom browser driver" do
-    Huzzah.config.grid_url = File.readlines('grid.txt').first
-    Huzzah.config.chrome(:switches => ["%w[--ignore-certificate-errors]"],
-                          :version => '21', :platform => 'linux')
-
-    Huzzah.add_role :user
-    as :user, visit: 'dreamcars'
-    expect(page_title).to eql 'Home | MDC'
-  end
 
 end

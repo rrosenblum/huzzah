@@ -23,9 +23,9 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency('pry', '~> 0.10.1')
   spec.add_development_dependency('simplecov', '~>  0.10.0')
   spec.add_development_dependency('rake', '~> 10.4.0')
+  spec.add_development_dependency('factory_girl', '4.5.0')
 
   spec.add_runtime_dependency('watir-webdriver', '0.6.10')
-  spec.add_runtime_dependency('appium_lib', '7.0.0')
   spec.add_runtime_dependency('activesupport', '4.2.2')
   spec.post_install_message = "Huzzah!"
 

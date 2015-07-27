@@ -107,6 +107,13 @@ module Huzzah
       end
 
       ##
+      # Wrapper for Watir::Browser.wait_until
+      #
+      def wait_until(*args, &block)
+        browser.wait_until *args, &block
+      end
+
+      ##
       # Wrapper for Watir::Browser.wait_while
       #
       def wait_while(*args, &block)
@@ -145,9 +152,6 @@ module Huzzah
         end
         browser
       end
-
-
-      private
 
       def browser
         Huzzah.active_role.session.driver

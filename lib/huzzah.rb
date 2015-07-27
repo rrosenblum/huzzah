@@ -1,13 +1,10 @@
 require 'active_support/all'
 require 'ostruct'
 require 'watir-webdriver'
-require 'appium_lib'
 require_relative 'core_ext/string'
 require_relative 'core_ext/watir'
 require_relative 'huzzah/config'
 require_relative 'huzzah/dsl/framework'
-require_relative 'huzzah/dsl/mobile'
-require_relative 'huzzah/dsl/shared'
 require_relative 'huzzah/dsl/web'
 require_relative 'huzzah/dsl'
 require_relative 'huzzah/flow'
@@ -17,7 +14,6 @@ require_relative 'huzzah/page'
 require_relative 'huzzah/role'
 require_relative 'huzzah/session'
 require_relative 'huzzah/site'
-require_relative 'huzzah/mobile_page'
 
 
 module Huzzah
@@ -44,7 +40,14 @@ module Huzzah
 
     attr_accessor :config, :active_role
 
-
+    ##
+    # Instantiates the configuration. At a minimum you must
+    # provide the path to your 'huzzah' directory, the environment
+    # you wish to test against and the browser you want to use.
+    # Once the configuration is set it will automatically load all
+    # defined Roles, Sites, Apps, Pages, Partials, Flows, Models &
+    # Factories.
+    #
     def configure(&block)
       @config = Huzzah::Config.new &block
       load_all_entities
@@ -68,6 +71,11 @@ module Huzzah
       @sites ||= {}
     end
 
+    ##
+    # Instantiates a new Site and adds it to the sites Hash. Sites
+    # are simply configuration information about the application
+    # under test (e.g. urls, database connection info, etc).
+    #
     def add_site(name, data)
       if sites.has_key? name
         fail DuplicateMethodNameError,
@@ -85,6 +93,14 @@ module Huzzah
       @apps ||= []
     end
 
+    ##
+    # Generates a method for the app which takes the page name
+    # as an argument. The argument can be passed as a Symbol or
+    # a String.
+    #
+    # Example: App Google
+    #   google(:home).search_for 'Huzzah'
+    #
     def add_app(name)
       generate_app_method name
       apps << name
@@ -99,6 +115,11 @@ module Huzzah
       @pages ||= {}
     end
 
+    ##
+    # Validates that the generated method name for the Page is
+    # unique, requires the Page and sets a key for the Page in the
+    # pages Hash. The Page is instantiated upon first use.
+    #
     def add_page(name, file)
       validate_method_name name
       require file
@@ -144,6 +165,11 @@ module Huzzah
       @flows ||= {}
     end
 
+    ##
+    # Validates that the generated method name for the Flow is
+    # unique, requires the Flow and sets a key for the Flow in the
+    # flows Hash. The flow is instantiated immediately.
+    #
     def add_flow(name, file)
       generate_flow_method name
       require file

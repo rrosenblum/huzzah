@@ -2,7 +2,7 @@ module Huzzah
   class Config
 
     attr_accessor :path, :environment, :browser_type
-    attr_accessor :grid_url, :remote, :capabilities, :mobile_capabilities
+    attr_accessor :grid_url, :remote, :capabilities
 
     ##
     # Initializes the configuration and autoloads all sites, apps,
@@ -47,10 +47,6 @@ module Huzzah
     def internet_explorer(options = {})
       @capabilities = Selenium::WebDriver::Remote::Capabilities.internet_explorer options
       @remote = true
-    end
-
-    def android(options = {})
-      @mobile_capabilities = options
     end
 
     ##
