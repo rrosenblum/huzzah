@@ -33,22 +33,19 @@ module Huzzah
     class << self
 
       ##
-      # Defines a method with the given name that return a page element, act upon
-      # a page element or perform some other action.
+      # Defines a method with the given name that return a page element.
       #
-      #   let(:method_name) { block }
-      #   let(:login) { button(id: 'login').click }
+      #   locator(:method_name) { block }
+      #   locator(:login)  { button(id: 'login') }
       #
-      def let(method_name, &block)
+      def locator(method_name, &block)
         validate_method_name method_name
 
         define_method method_name.to_s do |*args|
           self.instance_exec *args, &block
         end
       end
-      alias_method :locator, :let
-      alias_method :action, :let
-      alias_method :value, :let
+      alias_method :let, :locator
 
       ##
       # Defines a method with the given name that returns an instance of
