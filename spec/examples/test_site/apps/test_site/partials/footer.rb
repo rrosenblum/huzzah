@@ -1,8 +1,8 @@
 module TestSite
   class Footer < Huzzah::Page
 
-    let(:footer_div) { div(id: 'footer').when_present }
-    let(:copyright)  { footer_div.span(id: 'copyright').text }
+    locator(:footer_div) { div(id: 'footer').when_present }
+    locator(:copyright)  { footer_div.span(id: 'copyright') }
 
   end
 end

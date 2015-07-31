@@ -3,7 +3,7 @@ module Google
 
     partial :search_form, Google::SearchForm
 
-    action(:search_for)     { |text| search_form.keywords.set text }
+    locator(:search)     { search_form.keywords }
 
   end
 end

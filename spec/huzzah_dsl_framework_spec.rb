@@ -48,7 +48,7 @@ describe Huzzah::DSL::Framework do
     as :user1, on: 'test_site'
     name = user1.full_name
     test_site(:home) do
-      set_full_name name
+      full_name.set name
     end
     expect(test_site(:home).full_name.value).to eql user1.full_name
   end

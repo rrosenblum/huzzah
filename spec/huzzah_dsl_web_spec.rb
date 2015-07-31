@@ -14,28 +14,28 @@ describe Huzzah::DSL::Web do
 
   it 'handles switching browser window by partial Title' do
     as :user2, on: 'test_site'
-    test_site(:home).launch_popup
+    test_site(:home).launch_popup.click
     switch_to_window title: 'Popup'
     expect(page_title).to include 'Popup'
   end
 
   it 'handles switching browser window by partial URL' do
     as :user2, on: 'test_site'
-    test_site(:home).launch_popup
+    test_site(:home).launch_popup.click
     switch_to_window url: 'popup.html'
     expect(page_title).to include 'Popup'
   end
 
   it 'switching browser windows uses partial Title by default' do
     as :user2, on: 'test_site'
-    test_site(:home).launch_popup
+    test_site(:home).launch_popup.click
     switch_to_window 'Popup'
     expect(page_title).to include 'Popup'
   end
 
   it 'handles switching back to main window' do
     as :user2, on: 'test_site'
-    test_site(:home).launch_popup
+    test_site(:home).launch_popup.click
     switch_to_window 'Popup'
     switch_to_main_browser
     expect(page_title).to include 'Home'
@@ -98,7 +98,7 @@ describe Huzzah::DSL::Web do
 
   it 'selects a specific browser window' do
     as :user1, on: 'test_site'
-    test_site(:home).launch_popup
+    test_site(:home).launch_popup.click
     window(title: 'Huzzah Test Site - Popup').use
     expect(page_text).to include 'Window Switching Test Page'
   end
