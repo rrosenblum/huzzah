@@ -149,10 +149,10 @@ NOTE: You should namespace your page-objects based on the name of your apps dire
 
 # Page Methods
 
-The **Huzzah::Page** class provides a #let method that provides a simple, yet flexible,
-interface for defining methods that interact with the DOM. The #let method takes two
-arguments: a name and a block of Watir-WebDriver code (this syntax should be familiar to those using
-RSpec). The first argument is used to dynamically define a method with that name that will execute the
+The **Huzzah::Page** class provides a #locator method that provides a simple
+interface for defining methods that interact with the DOM. The #locator method takes two
+arguments: a name and a block of Watir-WebDriver code. The first argument is used to 
+dynamically define a method, with that name, that will execute the
 code provided in the block.
 
 Usage examples:
@@ -160,60 +160,54 @@ Usage examples:
 ```ruby
 module Google
   class SearchPage < Huzzah::Page
-    let(:search)                 { button(id: 'search_button').when_present.click }
-    let(:results)                { divs(id: /result_/) }
-    let(:search_box)             { text_field(id: 'search_terms') }
-    let(:current_search_terms)   { search_box.text }
-    let(:contains_search_term?)  { |term| current_search_terms.include? term }
+    locator(:search)        { button(id: 'search_button').when_present }
+    locator(:results)       { divs(id: /result_/) }
+    locator(:search_box)    { text_field(id: 'search_terms') }
+    locator(:result_link)   { |link_text| link(text: link_text).when_present }
   end
 end
 ```
 
-The #let method is intended to be used for short one-liner methods. If you need
-to perform multiple actions or complex logic, you can simply define methods within
-the page class:
+NOTE: While the #locator method is intended to be used for locating elements 
+on the page, it could be used for anything. It is recommended to use it just
+for locating elements.
+
+If you need to perform multiple actions or complex logic, you can simply 
+define methods within the page class:
 
 ```ruby
 module MyApp
   class HomePage < Huzzah::Page
-    let(:set_username)  { |username| text_field(id: "username").when_present.set username }
-    let(:set_password)  { |password| text_field(id: "password").when_present.set password }
-    let(:login)         { button(value: "Login").click }
+  
+    locator(:username)  { text_field(id: 'username').when_present }
+    locator(:password)  { text_field(id: 'password') }
+    locator(:login)     { button(value: 'Login') }
 
     def login_as(username, password)
-      set_username username
-      set_password password
-      login
+      username.set username
+      password.set password
+      login.click
     end
+    
   end
 end
 ```
 
-When defining #let methods, consider whether or not you actually need to return
-an instance of an element.
-
-```ruby
-# Using 'element' style. The #let statements are just locators.
-my_app(:home_page).user_username.when_present.set 'joseph'
-my_app(:home_page).user_password.set 'password'
-my_app(:home_page).login_button.click
-
-# Using 'action' style. The #let statements include locators and actions.
-my_app(:home_page).set_username 'joseph'
-my_app(:home_page).set_password 'password'
-my_app(:home_page).login
-```
-
-You may also scope element locators within your #let statements:
+You may also scope element locators within your #locator statements:
 
 ```ruby
 module MyApp
   class HomePage < Huzzah::Page
-    let(:login_form)    { form(name: 'login') }
-    let(:set_username)  { |username| login_form.text_field(id: "username").when_present.set username }
+  
+    locator(:login_form)   { form(name: 'login').when_present }
+    locator(:username)     { login_form.text_field(id: 'username') }
+    
   end
 end
 ```
+In the above example, 'login_form' is defined and then used as a starting point
+for 'username'. They do not need to be defined in any particular order, but it
+is recommended to define the parent element first for maintenance and readability.
 
 # Page Wrappers
 
@@ -250,14 +244,17 @@ wait_for_ajax
 
 # Partials
 
-For portions of pages that are shared across multiple pages, you can define a _partial_.
+For portions of pages that are shared across multiple pages or if you simply
+wish to logically break up a large page object, you can define a _partial_.
 A _partial_ is simply a _page_ that is pulled into another _page_.
 
 Example partial:
 ```ruby
 module Google
   class Header < Huzzah::Page
-    let(:gmail) { link(text: 'Gmail') }
+  
+    locator(:gmail) { link(text: 'Gmail') }
+    
   end
 end
 ```
@@ -266,9 +263,10 @@ Pull it into the **Google::Search** page:
 ```ruby
 module Google
   class SearchPage < Huzzah::Page
-    partial(:header, Google::Header)
+  
+    partial :header, Google::Header
 
-    # Elements, Actions, etc.
+    # Locators, Methods, etc.
   end
 end
 ```
@@ -286,11 +284,14 @@ going through a page:
 google(:header).gmail.click
 ```
 
-Partials can also used across 'apps'. This feature is intended to be used when modeling complex web applications. For instance, you can pull the Shared header into other applications:
+Partials can also used across 'apps'. This feature is intended to be used when modeling 
+complex web applications. For instance, you can pull the Shared header into other applications:
+
 ```ruby
 module MyApp
   class SearchPage < Huzzah::Page
-    partial(:header, Shared::Header)
+  
+    partial :header, Shared::Header
 
     # Elements, etc.
   end
@@ -310,9 +311,11 @@ Example: _admin.rb_
 
 ```ruby
 class Admin < Huzzah::Flow
+
   def delete_user(user)
     # Code to perform the delete
   end
+  
 end
 ```
 
@@ -323,12 +326,15 @@ admin.delete_user 'johndoe'
 ```
 
 NOTE: You cannot use the same name for a Flow and an App. The framework will
-throw an Huzzah::InvalidFlowNameError.
+throw an Huzzah::DuplicateMethodNameError.
 
 
 # User Roles
-A user role represents a single browser session. The browser is tied to a role, not to an particular site. The
-relationship between the browser instance and the site being visited is determined by your test code. This allows you to have multiple users on any site or the ability to seamlessly transition users from one site to another.
+A user role represents a single browser session. The browser is tied to a role, 
+not to an particular site. The relationship between the browser instance and 
+the site being visited is determined by your test code. This allows you to 
+have multiple users on any site or the ability to seamlessly transition users 
+from one site to another.
 
 You define your user roles after you configure your Huzzah environment:
 ```ruby
@@ -341,8 +347,8 @@ Huzzah.add_roles :buyer, :seller, :admin
 
 NOTE: A browser will not be launched until you perform an action with the user.
 
-Optionally, you can define your user roles in YAML files that contain information
-about the roles:
+Optionally, you can define your user roles in YAML files (under the 'roles' 
+directory) that contain information about the roles:
 
 ```yml
 #buyer.yml
@@ -387,7 +393,7 @@ http://guides.rubyonrails.org/active_record_basics.html
 
 Huzzah will automatically require any files within the optional _factories_ & _models_ directories.
 
-# The DSL
+# The Huzzah DSL
 ```ruby
 # Switch user roles. Optionally, navigate to a site.
 as :user
@@ -420,20 +426,20 @@ switch_to_main_browser
 wait_for_ajax
 ```
 
-In addition, the framework dynamically adds methods to the DSL for all _apps (pages & partials)_
+In addition, the framework dynamically adds methods to the DSL for all _apps, (pages & partials)_
 and _flows_.
 
 The methods defined for _pages_ and _partials_ also accept blocks of code:
 ```ruby
 # App example: Without Block
-google(:home_page).set_search_terms 'Cucumber'
-google(:home_page).search
+google(:home_page).search_terms.set 'Cucumber'
+google(:home_page).search.click
 
 
 # App example: With Block
-google(:home_page) do |page|
-  page.set_search_terms 'Cucumber'
-  page.search
+google(:home_page) do
+  search_terms.set 'Cucumber'
+  search.click
 end
 ```
 The block functionality is most useful when you are performing multiple actions
@@ -478,7 +484,6 @@ some additional configuration. The example below shows how to run remotely using
 
 ```ruby
 Huzzah.config.grid_url = 'http://my.gridhub.server:9000/wd/hub'
-Huzzah.config.remote = true
 Huzzah.config.chrome(:switches => ["%w[--ignore-certificate-errors]"],
                      :version => '31', :platform => 'windows')
 ```
