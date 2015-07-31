@@ -104,7 +104,7 @@ module Huzzah
       # @return [OpenStruct] The site configuration
       #
       def site_config
-        Huzzah.sites[active_site]
+        Huzzah.sites[active_site.to_sym]
       end
 
       def user_context

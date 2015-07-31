@@ -29,7 +29,7 @@ module Huzzah
     #
     def load_site(name, navigate=false)
       @site = name
-      @site_data = Huzzah.sites[@site]
+      @site_data = Huzzah.sites[@site.to_sym]
       if navigate and @driver_type.eql? :web
         @driver.goto site_data.url
       end
