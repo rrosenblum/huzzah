@@ -24,8 +24,7 @@ describe Huzzah, 'Page' do
 
   it "does not allow 'let' method name from the Watir::Container module" do
     expect { Google::Home.let(:table) { div(id: 'main') }
-    }.to raise_error Huzzah::RestrictedMethodNameError,
-                     "You cannot use method names like 'table' from the Watir::Container module in 'let' statements"
+    }.to raise_error Huzzah::RestrictedMethodNameError
   end
 
   it 'accepts the browser upon initialization' do

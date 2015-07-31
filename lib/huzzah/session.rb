@@ -7,7 +7,7 @@ module Huzzah
     # Create a new Session and default the driver type to
     # :web (in preparation for mobile support)
     #
-    def initialize(driver_type=:web)
+    def initialize(driver_type = :web)
       @driver_type = driver_type
     end
 
@@ -18,21 +18,19 @@ module Huzzah
     # local machine.
     #
     def start
-      unless @driver
-        remote ? start_watir_remotely : start_watir_locally
-      end
+      return if @driver
+      remote ? start_watir_remotely : start_watir_locally
     end
 
     ##
     # Loads the Site information. If navigate is true, it will url for the
     # environment specified in Huzzah::Config.environment.
     #
-    def load_site(name, navigate=false)
+    def load_site(name, navigate = false)
       @site = name
       @site_data = Huzzah.sites[@site.to_sym]
-      if navigate and @driver_type.eql? :web
-        @driver.goto site_data.url
-      end
+      return unless @driver_type.eql? :web
+      @driver.goto site_data.url if navigate
     end
 
     ##
@@ -41,20 +39,17 @@ module Huzzah
     # method when you do not want to close the browser between test scenarios.
     #
     def reset!
-      if @driver.is_a? Watir::Browser
-        @driver.alert.close if @driver.alert.exists?
-        @driver.cookies.clear
-        @driver.goto 'about:blank'
-      end
+      fail unless @driver.is_a? Watir::Browser
+      @driver.alert.close if @driver.alert.exists?
+      @driver.cookies.clear
+      @driver.goto 'about:blank'
     end
 
     ##
     # Closes the browser.
     #
     def quit
-      unless @driver.nil?
-        @driver.close
-      end
+      @driver.close unless @driver.nil?
       @driver = nil
     end
 
@@ -88,5 +83,3 @@ module Huzzah
 
   end
 end
-
-

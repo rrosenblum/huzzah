@@ -1,15 +1,13 @@
 module Watir
-
   class Select
 
     def selected_option
-      self.selected_options.first.text
+      selected_options.first.text
     end
 
     def available_options
-      self.options.map(&:text)
+      options.map(&:text)
     end
 
   end
-
 end

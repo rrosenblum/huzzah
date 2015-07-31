@@ -18,7 +18,7 @@ module Huzzah
           module_name = "#{__method__.to_s.camelize}"
           page_name = "#{args.first.to_s.camelize}"
           page_class = "#{module_name}::#{page_name}"
-          unless Huzzah.pages.has_key? page_class
+          unless Huzzah.pages.key? page_class
             fail Huzzah::UnknownPageError, page_class
           end
           on page_class, &block

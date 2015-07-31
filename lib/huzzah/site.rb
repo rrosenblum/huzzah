@@ -5,7 +5,7 @@ module Huzzah
 
     def initialize(name, data, environment)
       @name = name
-      @data = OpenStruct.new YAML::load_file(data)[environment]
+      @data = OpenStruct.new YAML.load_file(data)[environment]
       @url = @data.url
     end
 

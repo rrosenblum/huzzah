@@ -6,7 +6,6 @@ module Huzzah
 
     attr_accessor :browser
 
-
     def framed_element(type, locator)
       find_element_in_all_frames browser, type, locator
     end
@@ -17,7 +16,7 @@ module Huzzah
     # @return [Boolean]
     #
     def has_text?(text)
-      browser.text.include? text
+      text.include? text
     end
     alias_method :page_has_text?, :has_text?
 
@@ -26,9 +25,8 @@ module Huzzah
     # Currently only works with jQuery.
     #
     def wait_for_ajax
-      browser.wait_until { browser.execute_script("return jQuery.active") == 0 }
+      wait_until { execute_script('return jQuery.active').eql? 0 }
     end
-
 
     class << self
 
@@ -42,7 +40,7 @@ module Huzzah
         validate_method_name method_name
 
         define_method method_name.to_s do |*args|
-          self.instance_exec *args, &block
+          instance_exec(*args, &block)
         end
       end
       alias_method :let, :locator
@@ -73,18 +71,19 @@ module Huzzah
       # let and partial methods.
       #
       def defined_methods
-        @defined_methods ||= Array.new
+        @defined_methods ||= []
       end
 
       ##
       # Prevents duplicate dynamically defined methods.
       #
-      def validate_method_name(name, restrict=true)
+      def validate_method_name(name, restrict = true)
         if defined_methods.include? name
           fail Huzzah::DuplicateElementMethodError, name
-        elsif restrict and Watir::Container.instance_methods.include? name
+        elsif restrict && Watir::Container.instance_methods.include?(name)
           fail Huzzah::RestrictedMethodNameError,
-               "You cannot use method names like '#{name}' from the Watir::Container module in 'let' statements"
+               %(You cannot use method names like '#{name}' from
+                 the Watir::Container module in 'locator' statements)
         else
           defined_methods << name
         end
@@ -105,12 +104,15 @@ module Huzzah
       fail Huzzah::BrowserNotInitializedError if @browser.nil?
 
       if method_name.to_s.start_with? '_'
-        warn "DEPRECATION WARNING: You no longer nee to proceed locator methods with an underscore. Just call #{method_name.to_s[1..-1]} instead of #{method_name}"
+        warn %(DEPRECATION WARNING: You no longer nee to proceed locator
+               methods with an underscore. Just call
+               #{method_name.to_s[1..-1]} instead of #{method_name})
         find_element_in_all_frames(@browser, method_name[1..-1].to_sym, *args, &block)
       elsif @browser.methods.include? method_name
         find_element_in_all_frames(@browser, method_name.to_sym, *args, &block)
       else
-        fail Huzzah::NoMethodError, "Method '#{method_name}' undefined in #{self.class}"
+        fail Huzzah::NoMethodError,
+             "Method '#{method_name}' undefined in #{self.class}"
       end
     end
 
@@ -166,6 +168,8 @@ module Huzzah
     def_delegators :browser, :window
     def_delegators :browser, :windows
     def_delegators :browser, :p
+    def_delegators :browser, :wait_while
+    def_delegators :browser, :wait_until
 
   end
 end

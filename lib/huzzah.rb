@@ -15,7 +15,6 @@ require_relative 'huzzah/role'
 require_relative 'huzzah/session'
 require_relative 'huzzah/site'
 
-
 module Huzzah
 
   class UndefinedRoleError < StandardError; end
@@ -49,7 +48,7 @@ module Huzzah
     # Factories.
     #
     def configure(&block)
-      @config = Huzzah::Config.new &block
+      @config = Huzzah::Config.new(&block)
       load_all_entities
     end
 
@@ -77,7 +76,7 @@ module Huzzah
     # under test (e.g. urls, database connection info, etc).
     #
     def add_site(name, data)
-      if sites.has_key? name
+      if sites.key? name
         fail DuplicateMethodNameError,
              "Site: #{name} is already defined!"
       end
@@ -140,7 +139,7 @@ module Huzzah
     #
     #    Huzzah.add_role :admin
     #
-    def add_role(role_name, data=nil)
+    def add_role(role_name, data = nil)
       name = role_name.to_sym
       generate_role_method name
       roles[name] = Huzzah::Role.new name, data, config.environment

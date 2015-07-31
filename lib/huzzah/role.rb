@@ -6,7 +6,7 @@ module Huzzah
     def initialize(role_name, role_data, environment)
       @name = role_name
       unless role_data.nil?
-        @data = OpenStruct.new YAML::load_file(role_data)[environment]
+        @data = OpenStruct.new YAML.load_file(role_data)[environment]
       end
       @session = Huzzah::Session.new user_type
     end
