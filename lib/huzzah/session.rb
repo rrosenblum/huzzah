@@ -18,8 +18,11 @@ module Huzzah
     # local machine.
     #
     def start
-      return if @driver
-      remote ? start_watir_remotely : start_watir_locally
+      begin
+        return if @driver.exists?
+      rescue
+        remote ? start_watir_remotely : start_watir_locally
+      end
     end
 
     ##
@@ -49,9 +52,11 @@ module Huzzah
     # Closes the browser.
     #
     def quit
-      @driver.close unless @driver.nil?
-      @driver = nil
+      unless @driver.nil?
+        @driver.close if @driver.exists?
+      end
     end
+
 
     private
 

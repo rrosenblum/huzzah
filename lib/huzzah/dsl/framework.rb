@@ -7,9 +7,10 @@ module Huzzah
       #
       # @return [Watir::Browser] The browser instance for the current user session.
       #
-      def browser
+      def active_browser
         Huzzah.active_role.session.driver
       end
+      alias_method :browser, :active_browser
 
       ##
       # Returns the name of the site that the current session is using.
@@ -77,7 +78,7 @@ module Huzzah
       # Returns the underlying Selenium driver
       #
       def driver
-        Huzzah.active_role.session.driver
+        active_browser.driver
       end
 
       ##

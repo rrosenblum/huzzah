@@ -44,7 +44,7 @@ describe Huzzah, 'Session' do
     @session = Huzzah::Session.new
     @session.start
     @session.quit
-    expect(@session.driver).to be_nil
+    expect(@session.driver).not_to be_exists
   end
 
   it 'loads site data and navigates to the site url' do
