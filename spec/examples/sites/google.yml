@@ -1,0 +1,4 @@
+---
+prod:
+  :url: 'http://www.google.com'
+  :title: 'Google'

@@ -1,0 +1,4 @@
+---
+prod:
+  :url: 'http://www.wikipedia.com'
+  :title: 'Bing'
