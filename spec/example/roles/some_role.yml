@@ -1,0 +1,9 @@
+---
+dev:
+  :username: 'batman'
+  :password: '123456'
+  :full_name: 'Bruce Wayne'
+prod:
+  :username: 'superman'
+  :password: '123Abc!'
+  :full_name: 'Clark Kent'
