@@ -1,9 +1,9 @@
 module Huzzah
   class Site
-    extend Huzzah::SiteLoader
+    include PageLoader
 
-    def self.inherited(site)
-      add_to_role(site)
+    def initialize
+      add_pages!
     end
 
   end

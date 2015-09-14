@@ -1,13 +1,7 @@
 module Huzzah::PageLoader
   private
-  def get_site_for(page)
-    module_name = page.to_s.deconstantize.constantize
-    module_name.const_get(module_name.to_s)
-  end
-
-  def add_to_site(page)
-    get_site_for(page).class_eval do
-      define_method(page.to_s.demodulize.underscore) { page.new }
-    end
+  def add_pages!
+    pages = Huzzah::Page.subclasses.select { |page| page.to_s.deconstantize == self.class.to_s.demodulize }
+    pages.each { |page| define_singleton_method(page.to_s.demodulize.underscore.to_sym) { page.new } }
   end
 end
