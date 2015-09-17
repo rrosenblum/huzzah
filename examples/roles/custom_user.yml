@@ -1,0 +1,5 @@
+prod:
+  username: 'tjefferson'
+  password: 'p@$$W0rD'
+  full_name: 'Thomas Jefferson'
+  driver: 'custom_firefox'

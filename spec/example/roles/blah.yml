@@ -1,9 +1,0 @@
----
-dev:
-  :username: 'jsmith'
-  :password: '123456'
-  :full_name: 'John Smith'
-prod:
-  :username: 'j$m14h'
-  :password: '123Abc!'
-  :full_name: 'John Smith'
