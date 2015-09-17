@@ -6,7 +6,7 @@ describe Huzzah::Cucumber::DSL do
 
   before(:each) do
     Huzzah.configure do |config|
-      config.path = "#{$PROJECT_ROOT}/examples"
+      config.path = "#{$PROJECT_ROOT}/spec/examples"
       config.environment = 'prod'
       config.default_driver = :firefox
     end
