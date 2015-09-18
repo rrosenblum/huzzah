@@ -9,7 +9,7 @@ module Huzzah
       @role_data = ActiveSupport::HashWithIndifferentAccess.new
       load_role_data name, args
       load_files!
-      generate_site_methods @site_constants
+      generate_site_methods(@role_data)
     end
 
     ##
@@ -23,9 +23,7 @@ module Huzzah
       send(site)
     end
 
-
     private
-
     ##
     # Merge and freeze role data from YAML and custom Hash argument
     #

@@ -1,7 +1,4 @@
 module Huzzah::SiteBuilder
-
-  attr_accessor :sites
-
   ##
   # Launches a browser for the role. It uses the default driver
   # unless a driver is specified in the role's YAML file.
@@ -15,39 +12,32 @@ module Huzzah::SiteBuilder
     unless Huzzah.drivers.key? @driver
       fail Huzzah::DriverNotDefinedError, "Driver '#{@driver}' is not defined."
     end
-    @browser = Huzzah.drivers[@driver].call
+    @browser ||= Huzzah.drivers[@driver].call
   end
 
 
   private
 
-  def generate_site_methods(site_names)
-    @sites = {}
-    site_names.each do |site_name|
-      method_name = site_name.to_s.underscore
-      Huzzah::Role.class_eval do
-        define_method(method_name) do
-          site_name = __method__.capitalize
-          return @sites[site_name] if @sites.key? site_name
-          @sites[site_name] = Huzzah::Site.new site_name, @role_data
-          if @sites[site_name].config
-            instantiate_browser site_name
-          else
-            pass_browser_to_site site_name
-          end
-          @sites[site_name]
-        end
-      end
+  def define_sites!
+    get_site_names.each do |site|
+      next if site_defined?(site)
+      site.deconstantize.constantize.const_set(site.demodulize, Class.new(Huzzah::Site))
     end
   end
 
-  def instantiate_browser(site_name)
-    launch_browser if @browser.nil?
-    @sites[site_name].browser = @browser
-    @sites[site_name].visit
+  def get_site_names
+    Huzzah::Page.subclasses.map(&:to_s).map(&:deconstantize).flat_map { |m| "#{m}::#{m}" }.uniq
   end
 
-  def pass_browser_to_site(site_name)
-    @sites[site_name].browser = @browser if @browser
+  def site_defined?(site)
+    return true if site.constantize rescue NameError
+    false
+  end
+
+  def generate_site_methods(role_data)
+    define_sites!
+    Huzzah::Site.subclasses.each do |site|
+      define_singleton_method(site.to_s.demodulize.underscore.to_sym) { site.new(role_data, launch_browser) }
+    end
   end
 end

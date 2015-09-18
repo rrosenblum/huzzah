@@ -17,14 +17,14 @@ module FileLoader
     Dir["#{Huzzah.path}/partials/**/*.rb"].each do |file|
       require file
     end
-    @starting_constants = Object.constants
+    #@starting_constants = Object.constants
   end
 
   def require_pages
     Dir["#{Huzzah.path}/pages/**/*.rb"].each do |file|
       require file
     end
-    @site_constants = Object.constants - @starting_constants
+    #@site_constants = Object.constants - @starting_constants
   end
 
   # def load_items!(item)

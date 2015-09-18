@@ -109,30 +109,32 @@ describe Huzzah::Role do
 
   end
 
-  context 'instantiating secondary sites' do
 
-    it "dynamically instantiates site" do
-      @role = Huzzah::Role.new
-      expect(@role.wikipedia).to be_a Huzzah::Site
-    end
-
-    it 'does not load site data' do
-      @role = Huzzah::Role.new
-      expect(@role.wikipedia.config).to be_nil
-    end
-
-    it 'does not launch the browser' do
-      @role = Huzzah::Role.new
-      expect(@role.wikipedia.browser).to be_nil
-    end
-
-    it 'assigns the browser if a primary site has been visited' do
-      @role = Huzzah::Role.new
-      @role.google
-      expect(@role.wikipedia.browser).to be_a Watir::Browser
-    end
-
-  end
+  ##@uchagani: the concept of secondary sites don't make much sense to me.  all sites are created equal.
+  # context 'instantiating secondary sites' do
+  #
+  #   it "dynamically instantiates site" do
+  #     @role = Huzzah::Role.new
+  #     expect(@role.wikipedia).to be_a Huzzah::Site
+  #   end
+  #
+  #   it 'does not load site data' do
+  #     @role = Huzzah::Role.new
+  #     expect(@role.wikipedia.config).to be_nil
+  #   end
+  #
+  #   it 'does not launch the browser' do
+  #     @role = Huzzah::Role.new
+  #     expect(@role.wikipedia.browser).to be_nil
+  #   end
+  #
+  #   it 'assigns the browser if a primary site has been visited' do
+  #     @role = Huzzah::Role.new
+  #     @role.google
+  #     expect(@role.wikipedia.browser).to be_a Watir::Browser
+  #   end
+  #
+  # end
 
   context 'undefined sites' do
 

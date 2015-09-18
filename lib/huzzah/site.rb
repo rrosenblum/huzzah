@@ -2,19 +2,20 @@ module Huzzah
   class Site
     include PageBuilder
 
-    attr_accessor :site_name, :config, :role_data, :browser
+    attr_reader :site_name, :config, :role_data, :browser
 
-    def initialize(site_name, role_data)
-      @site_name = site_name
-      @role_data  = role_data
-      load_site_yaml site_name
-      generate_page_methods
+    def initialize(role_data, browser)
+      @role_data = role_data
+      @browser = browser
+      @site_name = self.class.name.demodulize.to_sym
+      @config = load_site_yaml
+      generate_page_methods!(role_data, browser)
+      visit
     end
 
     def visit
-      @browser.goto config[:url] if @config
+      @browser.goto(config[:url]) if @config
     end
-
 
     private
 
@@ -22,16 +23,10 @@ module Huzzah
     # Loads the site's config data for the environment variable set
     # in Huzzah.environment.
     #
-    def load_site_yaml(site_name)
-      name = site_name.to_s.underscore
-      file = "#{Huzzah.path}/sites/#{name}.yml"
-      if File.exists?(file)
-        env = Huzzah.environment
-        raw_data = YAML.load_file(file)[env].symbolize_keys
-        @config = Hash[raw_data.map { |k, v| [k.to_sym, v] }]
-      else
-        @config = nil
-      end
+    def load_site_yaml
+      file = "#{Huzzah.path}/sites/#{@site_name}.yml"
+      return YAML.load_file(file)[Huzzah.environment].with_indifferent_access if File.exists?(file)
+      nil
     end
 
   end
