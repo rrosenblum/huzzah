@@ -8,7 +8,7 @@ module Huzzah
     end
 
     def validate_method_name(name, restrict = true)
-      if defined_methods.include? name
+      if defined_methods.include?(name)
         fail Huzzah::DuplicateLocatorMethodError, name
       elsif restrict && Watir::Container.instance_methods.include?(name)
         fail Huzzah::RestrictedMethodNameError,

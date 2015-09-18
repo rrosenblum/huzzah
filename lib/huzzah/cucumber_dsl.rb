@@ -3,20 +3,15 @@ module Huzzah
     module DSL
 
       def as(role_name)
-        role = instance_variable_get "@#{role_name}"
+        role = instance_variable_get("@#{role_name}")
         fail Huzzah::RoleNotDefinedError unless role
         fail Huzzah::NotARoleError unless role.is_a? Huzzah::Role
         role
       end
 
       def close_browsers
-        instance_variables.each do |instance_variable|
-          instance = instance_variable_get instance_variable
-          if instance.is_a? Huzzah::Role
-            if instance.browser
-              instance.browser.close if instance.browser.exists?
-            end
-          end
+        ObjectSpace.each_object(Huzzah::Role).each do |role|
+          role.browser.close rescue NoMethodError
         end
       end
 
