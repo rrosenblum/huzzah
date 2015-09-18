@@ -29,7 +29,9 @@ module Huzzah
     #
     def load_role_data(name, args)
       role_data = load_config("#{Huzzah.path}/roles/#{name}.yml")
-      warn "No role data found for '#{name}'" if role_data.empty?
+      if name && role_data.empty?
+        warn "No role data found for '#{name}'"
+      end
       merge_role_args(role_data, args).freeze
     end
 
