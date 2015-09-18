@@ -32,8 +32,7 @@ module Huzzah
       if @browser.methods.include? method_name
         @browser.send method_name, *args, &block
       else
-        fail Huzzah::NoMethodError,
-             "Method '#{method_name}' undefined in #{self.class}"
+        super
       end
     end
 

@@ -10,7 +10,7 @@ module Huzzah
       @browser = browser
       @site_name = self.class.name.demodulize.to_sym
       @config = load_config("#{Huzzah.path}/sites/#{@site_name}.yml")
-      generate_page_methods!(role_data, browser)
+      generate_page_methods!(role_data, @browser)
       visit
     end
 

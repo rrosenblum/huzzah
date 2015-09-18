@@ -3,7 +3,7 @@ module Huzzah
     def locator(name, &block)
       validate_method_name(name)
       define_method(name) do |*args|
-        block.call % args
+        instance_exec(*args, &block)
       end
     end
 
