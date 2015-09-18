@@ -34,7 +34,7 @@ module Huzzah::SiteBuilder
     false
   end
 
-  def generate_site_methods(role_data)
+  def generate_site_methods!(role_data)
     define_sites!
     Huzzah::Site.subclasses.each do |site|
       define_singleton_method(site.to_s.demodulize.underscore.to_sym) { site.new(role_data, launch_browser) }

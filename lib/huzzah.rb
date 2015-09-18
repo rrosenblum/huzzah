@@ -29,8 +29,8 @@ module Huzzah
     attr_accessor :path, :environment, :default_driver
     attr_accessor :sites
 
-    def configure(&block)
-      yield self
+    def configure
+      yield self if block_given?
     end
 
     def drivers

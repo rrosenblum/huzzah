@@ -1,11 +1,9 @@
 module Huzzah
   module Locator
-
-    def locator(method_name, &block)
-      validate_method_name method_name
-
-      define_method method_name.to_s do |*args|
-        instance_exec(*args, &block)
+    def locator(name, &block)
+      validate_method_name(name)
+      define_method(name) do |*args|
+        block.call % args
       end
     end
 
