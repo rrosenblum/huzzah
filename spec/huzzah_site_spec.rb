@@ -30,6 +30,7 @@ describe Huzzah::Site do
   end
 
   it 'knows the browser' do
+    skip 'Does the site need to expose the browser when it is already exposed to the page?'
     @role = Huzzah::Role.new
     expect(@role.google.browser).to be_a Watir::Browser
   end

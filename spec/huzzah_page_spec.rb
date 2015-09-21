@@ -32,6 +32,7 @@ describe Huzzah::Page do
   end
 
   it "does not allow duplicate 'locator' statements" do
+    @role = Huzzah::Role.new
     expect { Google::Home.locator(:search) { div(id: 'search') }
       }.to raise_error Huzzah::DuplicateLocatorMethodError, 'search'
   end
@@ -54,33 +55,22 @@ describe Huzzah::Page do
 
   it "wraps watir-webdriver 'browser' methods" do
     @role = Huzzah::Role.new
-    @role.google.visit
     expect(@role.google.home.title).to eql 'Google'
   end
 
   it "wraps watir-webdriver 'container' methods" do
     @role = Huzzah::Role.new
-    @role.google.visit
     expect(@role.google.home.button(name: 'btnK').value).to eql 'Google Search'
-  end
-
-  it 'raises error for unknown methods' do
-    @role = Huzzah::Role.new
-    @role.google.visit
-    expect { @role.google.home.undefined_method
-      }.to raise_error Huzzah::NoMethodError
   end
 
   it 'includes methods from partials' do
     @role = Huzzah::Role.new
-    @role.google.visit
     expect(@role.google.home).to respond_to(:keywords)
   end
 
   it 'allow page locator to call included partial locators' do
     @role = Huzzah::Role.new
-    @role.google.visit
-    expect(@role.google.home.search).to be_a Watir::TextField
+    expect(@role.google.home.keywords).to be_a Watir::TextField
   end
 
 end
