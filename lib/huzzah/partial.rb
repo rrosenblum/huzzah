@@ -1,5 +1,4 @@
 module Huzzah
-  class Partial
-    extend Locator
+  class Partial < Huzzah::Browseable
   end
 end

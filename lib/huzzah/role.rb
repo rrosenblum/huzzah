@@ -3,7 +3,7 @@ module Huzzah
     include FileLoader
     include SiteBuilder
 
-    attr_accessor :role_data, :driver, :browser
+    attr_accessor :role_data
 
     def initialize(name = nil, args = {})
       @role_data = load_role_data(name, args)

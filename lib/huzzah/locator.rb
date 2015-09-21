@@ -1,11 +1,14 @@
 module Huzzah
   module Locator
+
     def locator(name, &block)
       validate_method_name(name)
       define_method(name) do |*args|
         instance_exec(*args, &block)
       end
     end
+
+    private
 
     def validate_method_name(name, restrict = true)
       if defined_methods.include?(name)
