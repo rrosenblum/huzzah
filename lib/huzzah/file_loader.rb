@@ -3,6 +3,7 @@ module FileLoader
   def load_files!
     require_partials
     require_pages
+    require_flows
   end
 
   def require_partials
@@ -11,6 +12,10 @@ module FileLoader
 
   def require_pages
     get_loadable_files_for('pages').each { |file| require file }
+  end
+
+  def require_flows
+    get_loadable_files_for('flows').each { |file| require file }
   end
 
   def get_loadable_files_for(item)

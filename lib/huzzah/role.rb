@@ -2,6 +2,7 @@ module Huzzah
   class Role
     include FileLoader
     include SiteBuilder
+    include FlowBuilder
 
     attr_accessor :role_data
 
@@ -9,6 +10,7 @@ module Huzzah
       @role_data = load_role_data(name, args)
       load_files!
       generate_site_methods!(@role_data)
+      generate_flow_methods!
     end
 
     ##

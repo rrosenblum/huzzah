@@ -1,5 +1,7 @@
 class GoogleSearchForm < Huzzah::Partial
 
   locator(:keywords) { text_field(name: 'q') }
+  locator(:search_button) { button(name: 'btnG') }
+  locator(:search_results) { ol(id: 'rso') }
 
 end
