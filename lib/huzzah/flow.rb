@@ -6,8 +6,14 @@ module Huzzah
     end
 
     def method_missing(method_name, *args, &block)
-      return @role.send(method_name, *args) if @role.respond_to?(method_name, false)
-      super
+      if @role.respond_to?(method_name, false)
+        define_singleton_method(method_name) do |*args|
+          @role.send(method_name, *args, &block)
+        end
+        @role.send(method_name, *args, &block)
+      else
+        super
+      end
     end
 
     def respond_to?(method_name, include_private = false)
