@@ -11,7 +11,11 @@ module Huzzah
     end
 
     def visit(url)
-      @browser.goto(url)
+      #Holy dirty code, batman!
+      Watir::Wait.until(5)do
+        @browser.goto(url)
+        URI.parse(@browser.url).host.include?(URI.parse(url).host)
+      end
     end
   end
 end
