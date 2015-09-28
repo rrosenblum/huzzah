@@ -22,15 +22,15 @@ module Huzzah
 
     def generate_site_methods!(role_data)
       define_sites!
-      @sites_defined ||= {}
+      @sites ||= {}
       Huzzah::Site.subclasses.each do |site|
         define_singleton_method(site.to_s.demodulize.underscore.to_sym) do
-          return @sites_defined[site] unless @sites_defined[site].nil? or browser_closed?
+          return @sites[site] unless @sites[site].nil? or browser_closed?
           begin
-            @sites_defined[site] = site.new(role_data, launch_browser)
+            @sites[site] = site.new(role_data, launch_browser)
           rescue Errno::ECONNREFUSED
             reset_browser
-            @sites_defined = {}
+            @sites = {}
             retry
           end
         end
