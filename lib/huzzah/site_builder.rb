@@ -30,6 +30,7 @@ module Huzzah
             @sites_defined[site] = site.new(role_data, launch_browser)
           rescue Errno::ECONNREFUSED
             reset_browser
+            @sites_defined = {}
             retry
           end
         end
