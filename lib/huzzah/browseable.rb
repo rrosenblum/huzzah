@@ -10,12 +10,13 @@ module Huzzah
       @browser = browser
     end
 
-    def visit(url)
+    def visit
       #Holy dirty code, batman!
-      Watir::Wait.until(5)do
-        @browser.goto(url)
+      Watir::Wait.until(5) do
+        @browser.goto(@config[:url]) unless @config[:url].nil?
         URI.parse(@browser.url).host.include?(URI.parse(url).host)
       end
+      self
     end
   end
 end
