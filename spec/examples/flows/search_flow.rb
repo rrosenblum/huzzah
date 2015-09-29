@@ -12,8 +12,9 @@ class SearchFlow < Huzzah::Flow
   end
 
   def bing_result
-    google.visit.home.keywords.set 'Bing'
+    google.home.keywords.set 'Bing'
     google.home.search_button.click
+    sleep 2
     google.results.bing_link.click
     bing.home_page.search_box.set('Hello, World!')
     bing.home_page.search_button.click
