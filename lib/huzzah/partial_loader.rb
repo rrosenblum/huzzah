@@ -1,5 +1,6 @@
 module PartialLoader
   def include_partial(partial)
+    partial = const_get(partial.to_s.demodulize) unless partial < Huzzah::Partial
     partial_instance = partial.new
     partial_instance.class.instance_methods(false).each do |method|
       define_method(method) do |*args|
