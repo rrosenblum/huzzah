@@ -13,5 +13,9 @@ module Huzzah
       visit(@config[:url]) if @browser.url.eql? 'about:blank' and !@config[:url].nil?
     end
 
+    def on(page)
+      send(page)
+    end
+
   end
 end
