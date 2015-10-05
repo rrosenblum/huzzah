@@ -21,6 +21,9 @@ module Huzzah
     # @role.on('google')
     #
     def on(site)
+      unless site.is_a? Symbol or site.is_a? String
+        fail TypeError, 'You must pass a Symbol or String to the #on method'
+      end
       send(site)
     end
 
