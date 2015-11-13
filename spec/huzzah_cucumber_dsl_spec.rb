@@ -37,11 +37,10 @@ describe Huzzah::Cucumber::DSL do
   end
 
   it 'closes the browser for each instantiated role' do
-    skip 'Need to see if this is still a valid test without the launch_browser method'
     @role1 = Huzzah::Role.new
-    @role1.launch_browser
+    @role1.google
     @role2 = Huzzah::Role.new :standard_user
-    @role2.launch_browser
+    @role2.google
     close_browsers
     expect(@role1.browser).not_to be_exists
     expect(@role2.browser).not_to be_exists

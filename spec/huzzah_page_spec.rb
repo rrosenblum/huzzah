@@ -65,7 +65,6 @@ describe Huzzah::Page do
 
   it 'allows access to methods in partials' do
     @role = Huzzah::Role.new
-    binding.pry
     expect(@role.google.home.search_form).to respond_to(:keywords)
   end
 

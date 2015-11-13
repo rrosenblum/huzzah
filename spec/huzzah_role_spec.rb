@@ -60,27 +60,23 @@ describe Huzzah::Role do
   end
 
   it 'initializes the browser to the default_driver' do
-    skip 'Need to see if this is still a valid test without the launch_browser method'
     @role = Huzzah::Role.new 'standard_user'
-    @role.launch_browser
+    @role.google
     expect(@role.browser).to exist
   end
 
   it 'initializes the browser to a custom driver when specified' do
-    skip 'Need to see if this is still a valid test without the launch_browser method'
     Huzzah.define_driver(:custom_firefox) do
       Watir::Browser.new :firefox
     end
     @role = Huzzah::Role.new 'custom_user'
-    @role.launch_browser
+    @role.google
     expect(@role.driver).to eql 'custom_firefox'
   end
 
   it 'fails on undefined drivers' do
-    skip 'Need to see if this is still a valid test without the launch_browser method'
     Huzzah.default_driver = :foo_firefox
-    @role = Huzzah::Role.new
-    expect { @role.launch_browser }.to raise_error Huzzah::DriverNotDefinedError
+    expect { Huzzah::Role.new }.to raise_error Huzzah::DriverNotDefinedError
   end
 
   it 'passes the role data to the defined sites' do
@@ -93,7 +89,8 @@ describe Huzzah::Role do
     expect(@role.on('bing').config[:title]).to eql 'Bing'
   end
 
-  context 'instantiating primary sites' do
+
+  context 'sites with yaml configuration files' do
 
     it "dynamically instantiates site" do
       @role = Huzzah::Role.new
@@ -101,13 +98,11 @@ describe Huzzah::Role do
     end
 
     it 'launches a browser' do
-      skip 'Does the site need to expose the browser when it is already exposed to the page?'
       @role = Huzzah::Role.new
       expect(@role.google.browser).to be_a Watir::Browser
     end
 
-    it 'navigates the browser to the Huzzah.env URL' do
-      skip 'Does the site need to expose the browser when it is already exposed to the page?'
+    it 'navigates the browser to the Huzzah.environment URL' do
       @role = Huzzah::Role.new
       expect(@role.google.browser.title).to eql 'Google'
     end
@@ -115,28 +110,24 @@ describe Huzzah::Role do
   end
 
 
-  context 'instantiating secondary sites' do
+  context 'sites without yaml configuration files' do
 
     it "dynamically instantiates site" do
-      skip "the concept of secondary sites doesn't make much sense to me.  all sites are created equal."
       @role = Huzzah::Role.new
       expect(@role.wikipedia).to be_a Huzzah::Site
     end
 
     it 'does not load site data' do
-      skip "the concept of secondary sites doesn't make much sense to me.  all sites are created equal."
       @role = Huzzah::Role.new
-      expect(@role.wikipedia.config).to be_nil
+      expect(@role.wikipedia.config).to be_empty
     end
 
     it 'does not launch the browser' do
-      skip "the concept of secondary sites doesn't make much sense to me.  all sites are created equal."
       @role = Huzzah::Role.new
-      expect(@role.wikipedia.browser).to be_nil
+      expect(@role.wikipedia.browser.url).to eql 'about:blank'
     end
 
-    it 'assigns the browser if a primary site has been visited' do
-      skip "the concept of secondary sites doesn't make much sense to me.  all sites are created equal."
+    it 'uses the browser from first site visited' do
       @role = Huzzah::Role.new
       @role.google
       expect(@role.wikipedia.browser).to be_a Watir::Browser
