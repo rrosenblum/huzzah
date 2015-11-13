@@ -16,7 +16,7 @@ describe Huzzah::Site do
 
   it "knows it's name" do
     @role = Huzzah::Role.new
-    expect(@role.bing.site_name).to eql :Bing
+    expect(@role.bing.site_name).to eql :bing
   end
 
   it 'automatically loads the config' do

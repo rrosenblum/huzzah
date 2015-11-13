@@ -63,14 +63,10 @@ describe Huzzah::Page do
     expect(@role.google.home.button(name: 'btnK').value).to eql 'Google Search'
   end
 
-  it 'includes methods from partials' do
+  it 'allows access to methods in partials' do
     @role = Huzzah::Role.new
-    expect(@role.google.home).to respond_to(:keywords)
-  end
-
-  it 'allow page locator to call included partial locators' do
-    @role = Huzzah::Role.new
-    expect(@role.google.home.keywords).to be_a Watir::TextField
+    binding.pry
+    expect(@role.google.home.search_form).to respond_to(:keywords)
   end
 
 end
