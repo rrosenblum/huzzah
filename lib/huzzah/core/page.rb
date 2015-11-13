@@ -1,10 +1,7 @@
 module Huzzah
-  class Page < Browseable
-    extend PartialLoader
-
-    def initialize(role_data, browser)
-      super(role_data, browser)
-    end
+  class Page < Huzzah::Base
+    extend Locator
+    extend PartialBuilder
 
   end
 end
