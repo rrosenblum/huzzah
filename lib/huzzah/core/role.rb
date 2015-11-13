@@ -1,16 +1,15 @@
 module Huzzah
-  class Role
+  class Role < Huzzah::Base
     include FileLoader
     include SiteBuilder
     include FlowBuilder
 
-    attr_accessor :role_data
-
     def initialize(name = nil, args = {})
       @role_data = load_role_data(name, args)
       load_files!
-      generate_site_methods!(@role_data)
+      generate_site_methods!
       generate_flow_methods!
+      launch_browser
     end
 
     ##

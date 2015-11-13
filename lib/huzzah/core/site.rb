@@ -1,16 +1,14 @@
 module Huzzah
-  class Site < Browseable
+  class Site < Huzzah::Base
     include FileLoader
     include PageBuilder
 
-    attr_reader :site_name, :config, :role_data
+    attr_reader :site_name, :config
 
-    def initialize(role_data, browser)
-      super(role_data, browser)
-      @site_name = self.class.name.demodulize.to_sym
+    def initialize(site_name)
+      @site_name = site_name
       @config = load_config("#{Huzzah.path}/sites/#{@site_name}.yml")
-      generate_page_methods!(role_data, @browser)
-      visit(@config[:url]) if @browser.url.eql? 'about:blank' and !@config[:url].nil?
+      define_page_methods!
     end
 
     def on(page)
@@ -18,6 +16,12 @@ module Huzzah
         fail TypeError, 'You must pass a Symbol or String to the #on method'
       end
       send(page)
+    end
+
+    def visit
+      if @browser.url.eql? 'about:blank' and !@config[:url].nil?
+        @browser.goto(@config[:url])
+      end
     end
 
   end
