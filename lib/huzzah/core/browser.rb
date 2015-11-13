@@ -37,7 +37,8 @@ module Huzzah
         @driver = Huzzah.default_driver
       end
       unless Huzzah.drivers.key? @driver
-        fail Huzzah::DriverNotDefinedError, "Driver '#{@driver}' is not defined."
+        fail Huzzah::DriverNotDefinedError,
+             "Driver '#{@driver}' is not defined."
       end
       @browser ||= Huzzah.drivers[@driver].call
     end
