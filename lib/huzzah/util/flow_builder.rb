@@ -4,8 +4,14 @@ module Huzzah
     private
 
     def generate_flow_methods!
-      Huzzah::Flow.subclasses.each do |flow|
-        define_singleton_method(flow.to_s.demodulize.underscore) { flow.new(self) }
+      Huzzah::Flow.subclasses.each do |subclass|
+        flow_name = subclass.to_s.demodulize.underscore
+        define_singleton_method(flow_name) do
+          flow = subclass.new
+          flow.role_data = @role_data
+          flow.browser = @browser
+          flow
+        end
       end
     end
 
