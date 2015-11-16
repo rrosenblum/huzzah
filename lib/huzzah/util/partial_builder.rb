@@ -7,11 +7,11 @@ module Huzzah
     # Defines a method with the given name that returns an instance of
     # a partial page class.
     #
-    #    partial(:partial_name, Partial::Class)
-    #    partial(:header, Google::Header)
+    #    include_partial(Partial::Class)
+    #    Include_partial(Google::Header)
     #
-    def partial(method_name, partial_class)
-      define_method(method_name.to_s) do |&block|
+    def include_partial(partial_class)
+      define_method(partial_class.to_s.demodulize.underscore.to_sym) do |&block|
         partial = partial_class.new
         partial.role_data = @role_data
         partial.browser = @browser

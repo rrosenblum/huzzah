@@ -1,7 +1,7 @@
 module Google
   class Home < Huzzah::Page
 
-    partial(:search_form, Google::SearchForm)
+    include_partial(Google::SearchForm)
 
     locator(:search) { div(id: 'search') }
 

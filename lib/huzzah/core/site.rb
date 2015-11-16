@@ -19,9 +19,8 @@ module Huzzah
     end
 
     def visit
-      if @browser.url.eql? 'about:blank' and !@config[:url].nil?
-        @browser.goto(@config[:url])
-      end
+      return if @config[:url].nil?
+      @browser.goto(@config[:url]) unless @browser.url.start_with?('http')
     end
 
   end
