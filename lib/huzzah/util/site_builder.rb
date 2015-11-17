@@ -3,13 +3,13 @@ module Huzzah
 
     private
 
-    def get_site_names
+    def site_names
       Huzzah::Page.subclasses.map(&:parent).uniq
     end
 
     def define_sites!
       @sites ||= {}
-      get_site_names.each do |site|
+      site_names.each do |site|
         site_name = site.to_s.underscore.to_sym
         @sites[site_name] = Huzzah::Site.new(site_name)
       end

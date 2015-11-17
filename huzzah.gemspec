@@ -16,7 +16,7 @@ Gem::Specification.new do |spec|
   spec.homepage = 'http://github.com/Manheim/huzzah'
   spec.license = 'MIT'
 
-  spec.files = `git ls-files`.split($/)
+  spec.files = `git ls-files`.split($INPUT_RECORD_SEPARATOR)
   spec.executables = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
   spec.test_files = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ['lib']
@@ -30,5 +30,4 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency('activesupport', '4.2.2')
   spec.add_runtime_dependency('watir-webdriver', '0.6.10')
   spec.post_install_message = 'Huzzah!'
-
 end

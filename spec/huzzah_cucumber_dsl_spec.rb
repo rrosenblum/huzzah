@@ -19,27 +19,27 @@ describe Huzzah::Cucumber::DSL do
 
   it 'dynamically switches roles' do
     @role1 = Huzzah::Role.new
-    @role2 = Huzzah::Role.new :standard_user
-    expect(as('role2').role_data[:password]).to eql 'p@$$W0rD'
+    @role2 = Huzzah::Role.new(:standard_user)
+    expect(as('role2').role_data[:password]).to eql('p@$$W0rD')
   end
 
   it 'fails when switching to an undefined role' do
     @role1 = Huzzah::Role.new
-    @role2 = Huzzah::Role.new :standard_user
-    expect { as 'role3' }.to raise_error Huzzah::RoleNotDefinedError
+    @role2 = Huzzah::Role.new(:standard_user)
+    expect { as 'role3' }.to raise_error(Huzzah::RoleNotDefinedError)
   end
 
   it 'fails when the specified role is not a Huzzah::Role object' do
     @role1 = Huzzah::Role.new
-    @role2 = Huzzah::Role.new :standard_user
+    @role2 = Huzzah::Role.new(:standard_user)
     @not_a_role = []
-    expect { as 'not_a_role' }.to raise_error Huzzah::NotARoleError
+    expect { as 'not_a_role' }.to raise_error(Huzzah::NotARoleError)
   end
 
   it 'closes the browser for each instantiated role' do
     @role1 = Huzzah::Role.new
     @role1.google
-    @role2 = Huzzah::Role.new :standard_user
+    @role2 = Huzzah::Role.new(:standard_user)
     @role2.google
     close_browsers
     expect(@role1.browser).not_to be_exists

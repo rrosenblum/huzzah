@@ -7,10 +7,9 @@ module Huzzah
       Huzzah::Page.subclasses.each do |subclass|
         parent = subclass.parent.to_s.underscore.to_sym
         page_name = subclass.to_s.demodulize.underscore.to_sym
-        if parent.eql? @site_name
-          define_singleton_method(page_name) do |&block|
-            return_page(subclass, &block)
-          end
+        next unless parent.eql?(@site_name)
+        define_singleton_method(page_name) do |&block|
+          return_page(subclass, &block)
         end
       end
     end

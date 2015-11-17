@@ -1,5 +1,7 @@
 module FileLoader
+
   private
+
   def load_files!
     require_partials
     require_pages
@@ -23,7 +25,9 @@ module FileLoader
   end
 
   def load_config(file)
-    return YAML.load_file(file)[Huzzah.environment].with_indifferent_access if File.exists?(file)
+    if File.exist?(file)
+      return YAML.load_file(file)[Huzzah.environment].with_indifferent_access
+    end
     ActiveSupport::HashWithIndifferentAccess.new
   end
 end

@@ -17,7 +17,6 @@ require_relative 'huzzah/core/flow'
 require_relative 'huzzah/core/site'
 require_relative 'huzzah/core/page'
 
-
 module Huzzah
 
   class DriverNotDefinedError < StandardError; end
@@ -55,7 +54,7 @@ module Huzzah
   end
 
   Huzzah.define_driver(:firefox) do
-    Watir::Browser.new :firefox
+    Watir::Browser.new(:firefox)
   end
 
   Huzzah.default_driver = :firefox

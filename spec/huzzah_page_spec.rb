@@ -11,30 +11,28 @@ describe Huzzah::Page do
   end
 
   after(:each) do
-    if @role
-      @role.browser.close if @role.browser
-    end
+    @role.browser.close if @role && @role.browser
   end
 
   it 'returns a instance of a page' do
     @role = Huzzah::Role.new
-    expect(@role.google.home).to be_a Huzzah::Page
+    expect(@role.google.home).to be_a(Huzzah::Page)
   end
 
   it 'fails for undefined pages' do
     @role = Huzzah::Role.new
-    expect { @role.google.foo }.to raise_error NoMethodError
+    expect { @role.google.foo }.to raise_error(NoMethodError)
   end
 
   it "allows adding 'locator' statements" do
     Google::Home.locator(:foo) { div(id: 'foo') }
-    expect(Google::Home.instance_methods).to include :foo
+    expect(Google::Home.instance_methods).to include(:foo)
   end
 
   it "does not allow duplicate 'locator' statements" do
     @role = Huzzah::Role.new
     expect { Google::Home.locator(:search) { div(id: 'search') }
-      }.to raise_error Huzzah::DuplicateLocatorMethodError, 'search'
+      }.to raise_error(Huzzah::DuplicateLocatorMethodError, 'search')
   end
 
   it 'calls a locator by name' do
@@ -44,23 +42,23 @@ describe Huzzah::Page do
 
   it "does not allow 'locator' method name from the Watir::Container module" do
     expect { Google::Home.locator(:table) { div(id: 'main') }
-    }.to raise_error Huzzah::RestrictedMethodNameError
+    }.to raise_error(Huzzah::RestrictedMethodNameError)
   end
 
   it 'accepts the browser upon initialization' do
     @role = Huzzah::Role.new
     browser = @role.google.home.browser
-    expect(browser).to be_kind_of Watir::Browser
+    expect(browser).to be_a(Watir::Browser)
   end
 
   it "wraps watir-webdriver 'browser' methods" do
     @role = Huzzah::Role.new
-    expect(@role.google.home.title).to eql 'Google'
+    expect(@role.google.home.title).to eql('Google')
   end
 
   it "wraps watir-webdriver 'container' methods" do
     @role = Huzzah::Role.new
-    expect(@role.google.home.button(name: 'btnK').value).to eql 'Google Search'
+    expect(@role.google.home.button(name: 'btnK').value).to eql('Google Search')
   end
 
   it 'allows access to methods in partials' do

@@ -20,7 +20,7 @@ module Huzzah
     # @role.on('google')
     #
     def on(site)
-      unless site.is_a? Symbol or site.is_a? String
+      unless site.is_a?(Symbol) || site.is_a?(String)
         fail TypeError, 'You must pass a Symbol or String to the #on method'
       end
       send(site)
@@ -42,7 +42,9 @@ module Huzzah
     # the YAML file. Any data from the custom Hash overrides data
     # from the YAML file.
     def merge_role_args(role_data, args)
-      fail ArgumentError, "Expected a Hash, got #{args.first.class}" unless args.is_a?(Hash)
+      unless args.is_a?(Hash)
+        fail ArgumentError, "Expected a Hash, got #{args.first.class}"
+      end
       role_data.merge!(args)
     end
 

@@ -22,7 +22,9 @@ module Huzzah
     #    browser.text_field(id: 'username')
     #
     def method_missing(method_name, *args, &block)
-      return @browser.send(method_name, *args, &block) if @browser.respond_to?(method_name, false)
+      if @browser.respond_to?(method_name, false)
+        return @browser.send(method_name, *args, &block)
+      end
       super
     end
 
