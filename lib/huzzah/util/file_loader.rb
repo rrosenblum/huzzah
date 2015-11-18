@@ -26,7 +26,9 @@ module FileLoader
 
   def load_config(file)
     if File.exist?(file)
-      return YAML.load_file(file)[Huzzah.environment].with_indifferent_access
+      config = YAML.load_file(file)[Huzzah.environment]
+      config = config.with_indifferent_access unless config.nil?
+      return config
     end
     ActiveSupport::HashWithIndifferentAccess.new
   end
