@@ -37,6 +37,7 @@ describe Huzzah::Page do
 
   it 'calls a locator by name' do
     @role = Huzzah::Role.new
+    @role.bing.visit
     expect(@role.bing.home_page.search_box).to exist
   end
 
@@ -47,17 +48,16 @@ describe Huzzah::Page do
 
   it 'accepts the browser upon initialization' do
     @role = Huzzah::Role.new
-    browser = @role.google.home.browser
-    expect(browser).to be_a(Watir::Browser)
+    expect(@role.google.home.browser).to be_a(Watir::Browser)
   end
 
   it "wraps watir-webdriver 'browser' methods" do
-    @role = Huzzah::Role.new
+    @role = Huzzah::Role.new(on: 'google')
     expect(@role.google.home.title).to eql('Google')
   end
 
   it "wraps watir-webdriver 'container' methods" do
-    @role = Huzzah::Role.new
+    @role = Huzzah::Role.new(on: 'google')
     expect(@role.google.home.button(name: 'btnK').value).to eql('Google Search')
   end
 

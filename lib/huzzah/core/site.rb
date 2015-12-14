@@ -20,7 +20,7 @@ module Huzzah
 
     def visit
       return if @config[:url].nil?
-      @browser.goto(@config[:url]) unless @browser.url.start_with?('http')
+      @browser.goto(@config[:url])
     end
 
   end

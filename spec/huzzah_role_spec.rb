@@ -58,17 +58,15 @@ describe Huzzah::Role do
   end
 
   it 'initializes the browser to the default_driver' do
-    @role = Huzzah::Role.new('standard_user')
-    @role.google
-    expect(@role.browser).to exist
+    @role = Huzzah::Role.new('standard_user', on: 'google')
+    expect(@role.browser).to be_a(Watir::Browser)
   end
 
   it 'initializes the browser to a custom driver when specified' do
     Huzzah.define_driver(:custom_firefox) do
       Watir::Browser.new(:firefox)
     end
-    @role = Huzzah::Role.new('custom_user')
-    @role.google
+    @role = Huzzah::Role.new('custom_user', on: 'google')
     expect(@role.driver).to eql('custom_firefox')
   end
 
@@ -101,7 +99,7 @@ describe Huzzah::Role do
     end
 
     it 'navigates the browser to the Huzzah.environment URL' do
-      @role = Huzzah::Role.new
+      @role = Huzzah::Role.new(on: 'google')
       expect(@role.google.browser.title).to eql('Google')
     end
 
@@ -122,12 +120,11 @@ describe Huzzah::Role do
 
     it 'does not navigate the browser' do
       @role = Huzzah::Role.new
-      expect(@role.wikipedia.browser.url).to eql('about:blank')
+      expect(@role.wikipedia.browser.url).not_to include('wikipedia')
     end
 
     it 'uses the browser from first site visited' do
-      @role = Huzzah::Role.new
-      @role.google
+      @role = Huzzah::Role.new(on: 'google')
       expect(@role.wikipedia.browser).to be_a(Watir::Browser)
     end
 

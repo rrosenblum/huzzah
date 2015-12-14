@@ -1,15 +1,12 @@
 module Huzzah
   class Role < Huzzah::Base
-    include FileLoader
-    include SiteBuilder
-    include FlowBuilder
+    include DSL
 
     def initialize(name = nil, args = {})
       @role_data = load_role_data(name, args)
-      load_files!
-      generate_site_methods!
-      generate_flow_methods!
+      generate_dsl_methods!
       launch_browser
+      on(@role_data[:on]).visit if @role_data[:on]
     end
 
     ##
@@ -32,8 +29,12 @@ module Huzzah
     # Merge and freeze role data from YAML and custom Hash argument
     #
     def load_role_data(name, args)
-      role_data = load_config("#{Huzzah.path}/roles/#{name}.yml")
-      warn "No role data found for '#{name}'" if name and role_data.empty?
+      if name.is_a?(Hash)
+        args = name
+        name = nil
+      end
+      @role_data = load_config("#{Huzzah.path}/roles/#{name}.yml")
+      warn "No role data found for '#{name}'" if name and @role_data.empty?
       merge_role_args(role_data, args).freeze
     end
 
