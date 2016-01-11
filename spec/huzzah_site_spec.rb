@@ -25,7 +25,7 @@ describe Huzzah::Site do
   end
 
   it 'automatically assigns the role data' do
-    @role = Huzzah::Role.new :standard_user
+    @role = Huzzah::Role.new(:standard_user)
     expect(@role.bing.role_data[:full_name]).to eql('George Washington')
   end
 

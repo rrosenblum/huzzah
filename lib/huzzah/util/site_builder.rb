@@ -28,7 +28,6 @@ module Huzzah
       site = @sites[site_name]
       site.role_data = @role_data
       site.browser = @browser
-      site.visit
       site.instance_eval(&block) if block_given?
       site
     end

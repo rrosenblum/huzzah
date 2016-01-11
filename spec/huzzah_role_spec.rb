@@ -99,7 +99,8 @@ describe Huzzah::Role do
     end
 
     it 'navigates the browser to the Huzzah.environment URL' do
-      @role = Huzzah::Role.new(on: 'google')
+      @role = Huzzah::Role.new
+      @role.visit(:google)
       expect(@role.google.browser.title).to eql('Google')
     end
 
@@ -124,7 +125,8 @@ describe Huzzah::Role do
     end
 
     it 'uses the browser from first site visited' do
-      @role = Huzzah::Role.new(on: 'google')
+      @role = Huzzah::Role.new
+      @role.visit(:google)
       expect(@role.wikipedia.browser).to be_a(Watir::Browser)
     end
 

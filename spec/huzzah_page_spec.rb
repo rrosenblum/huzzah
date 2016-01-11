@@ -52,12 +52,12 @@ describe Huzzah::Page do
   end
 
   it "wraps watir-webdriver 'browser' methods" do
-    @role = Huzzah::Role.new(on: 'google')
+    @role = Huzzah::Role.new(:standard_user).visit(:google)
     expect(@role.google.home.title).to eql('Google')
   end
 
   it "wraps watir-webdriver 'container' methods" do
-    @role = Huzzah::Role.new(on: 'google')
+    @role = Huzzah::Role.new(:standard_user).visit(:google)
     expect(@role.google.home.button(name: 'btnK').value).to eql('Google Search')
   end
 

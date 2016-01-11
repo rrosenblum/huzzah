@@ -6,7 +6,6 @@ module Huzzah
       @role_data = load_role_data(name, args)
       generate_dsl_methods!
       launch_browser
-      on(@role_data[:on]).visit if @role_data[:on]
     end
 
     ##
@@ -21,6 +20,22 @@ module Huzzah
         fail TypeError, 'You must pass a Symbol or String to the #on method'
       end
       send(site)
+    end
+
+    ##
+    # Handles initial navigation to a site. The 'site' argument can be either
+    # a Symbol or a String.
+    #
+    # Returns self so that you can chain site navigation at Role instantiation:
+    # Example:
+    #   @role = Huzzah::Role.new(:google_user).visit(:google)
+    #
+    # @role.on(:google)
+    # @role.on('google')
+    #
+    def visit(site)
+      on(site).visit
+      self
     end
 
     private
