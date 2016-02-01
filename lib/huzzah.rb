@@ -1,7 +1,5 @@
-require 'watir-webdriver'
 require 'active_support/all'
 require 'yaml'
-require 'pry'
 
 require_relative 'huzzah/util/file_loader'
 require_relative 'huzzah/util/site_builder'
