@@ -11,6 +11,7 @@ module Huzzah
         wait_until(timeout) { execute_script('return jQuery.active').eql?(0) }
       rescue
         puts "AJAX calls failed to complete within #{timeout} seconds"
+      end
     end
 
     private
