@@ -3,11 +3,14 @@ module Huzzah
     attr_accessor :browser, :driver
 
     ##
-    # Waits up to 30 seconds for AJAX calls to complete.
+    # Waits for AJAX calls to complete. Defaults to 30 seconds.
     # Currently only works with jQuery.
     #
-    def wait_for_ajax
-      wait_until { execute_script('return jQuery.active').eql? 0 }
+    def wait_for_ajax(timeout = 30)
+      begin
+        wait_until(timeout) { execute_script('return jQuery.active').eql?(0) }
+      rescue
+        puts "AJAX calls failed to complete within #{timeout} seconds"
     end
 
     private
@@ -33,12 +36,12 @@ module Huzzah
     # unless a driver is specified in the role's YAML file.
     #
     def launch_browser
-      if @role_data.key? :driver
+      if @role_data.key?(:driver)
         @driver = @role_data[:driver]
       else
         @driver = Huzzah.default_driver
       end
-      unless Huzzah.drivers.key? @driver
+      unless Huzzah.drivers.key?(@driver)
         fail Huzzah::DriverNotDefinedError,
              "Driver '#{@driver}' is not defined."
       end
