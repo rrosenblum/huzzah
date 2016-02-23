@@ -43,6 +43,9 @@ puts @role.browser.title
 @role.browser.close
 ```
 
+## Advanced Usage
+
+
 ## Contributing
 
 1. Fork it ( https://github.com/[my-github-username]/huzzah/fork )
@@ -51,3 +54,8 @@ puts @role.browser.title
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create a new Pull Request
 
+## Authors
+
+Lance Howard https://github.com/lkhoward
+
+Umair Chagani https://github.com/uchagani
