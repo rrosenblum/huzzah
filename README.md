@@ -46,7 +46,7 @@ puts @role.browser.title
 ## Advanced Usage
 Follow the [Tutorial](https://github.com/manheim/huzzah/wiki/Tutorial).
 
-Read the [Wiki](https://github.com/manheim/huzzah/wiki) 
+Read the [Wiki](https://github.com/manheim/huzzah/wiki). 
 
 ## Contributing
 
