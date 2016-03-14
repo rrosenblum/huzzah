@@ -1,19 +1,7 @@
 module Huzzah
   module Browser
     attr_accessor :browser, :driver
-
-    ##
-    # Waits for AJAX calls to complete. Defaults to 30 seconds.
-    # Currently only works with jQuery.
-    #
-    def wait_for_ajax(timeout = 30)
-      begin
-        wait_until(timeout) { execute_script('return jQuery.active').eql?(0) }
-      rescue
-        puts "AJAX calls failed to complete within #{timeout} seconds"
-      end
-    end
-
+    
     private
 
     ##
