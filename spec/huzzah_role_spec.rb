@@ -40,6 +40,12 @@ describe Huzzah::Role do
     expect(@role.role_data[:full_name]).to eql('John Doe')
   end
 
+  it 'takes role data as a hash without a role name provided' do
+    custom_data = { full_name: 'John Doe' }
+    @role = Huzzah::Role.new(custom_data)
+    expect(@role.role_data[:full_name]).to eql('John Doe')
+  end
+
   it 'merges role data when a hash and yaml file are provided' do
     custom_data = { full_name: 'John Doe' }
     @role = Huzzah::Role.new('standard_user', custom_data)
@@ -58,7 +64,7 @@ describe Huzzah::Role do
   end
 
   it 'initializes the browser to the default_driver' do
-    @role = Huzzah::Role.new('standard_user', on: 'google')
+    @role = Huzzah::Role.new('standard_user').visit(:google)
     expect(@role.browser).to be_a(Watir::Browser)
   end
 
@@ -66,7 +72,7 @@ describe Huzzah::Role do
     Huzzah.define_driver(:custom_firefox) do
       Watir::Browser.new(:firefox)
     end
-    @role = Huzzah::Role.new('custom_user', on: 'google')
+    @role = Huzzah::Role.new('custom_user').visit(:google)
     expect(@role.driver).to eql('custom_firefox')
   end
 
@@ -80,9 +86,20 @@ describe Huzzah::Role do
     expect(@role.google.role_data.object_id).to eql(@role.role_data.object_id)
   end
 
-  it 'dynamically switches the site' do
+  it 'dynamically switches the site (Symbol)' do
+    @role = Huzzah::Role.new
+    expect(@role.on(:bing).config[:title]).to eql('Bing')
+  end
+
+  it 'dynamically switches the site (String)' do
     @role = Huzzah::Role.new
     expect(@role.on('bing').config[:title]).to eql('Bing')
+  end
+
+  it 'fails when dynamically calling a page-object with the wrong type' do
+    @role = Huzzah::Role.new
+    @role.google.visit
+    expect { @role.on(1) }.to raise_error(TypeError)
   end
 
 

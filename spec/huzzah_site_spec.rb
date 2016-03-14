@@ -39,4 +39,22 @@ describe Huzzah::Site do
     expect(@role.google.home).to be_a(Huzzah::Page)
   end
 
+  it 'allows dynamically calling a page-object (Symbol)' do
+    @role = Huzzah::Role.new
+    @role.google.visit
+    expect(@role.google.on(:home)).to be_a(Huzzah::Page)
+  end
+
+  it 'allows dynamically calling a page-object (String)' do
+    @role = Huzzah::Role.new
+    @role.google.visit
+    expect(@role.google.on('home')).to be_a(Huzzah::Page)
+  end
+
+  it 'fails when dynamically calling a page-object with the wrong type' do
+    @role = Huzzah::Role.new
+    @role.google.visit
+    expect { @role.google.on(1) }.to raise_error(TypeError)
+  end
+
 end
