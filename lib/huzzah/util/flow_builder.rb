@@ -1,3 +1,4 @@
+# :nodoc:
 module Huzzah
   module FlowBuilder
 

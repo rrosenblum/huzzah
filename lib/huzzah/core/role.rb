@@ -10,7 +10,7 @@ module Huzzah
 
     ##
     # Dynamically switches the site. The 'site' argument can be either
-    # a Symbol or a String.
+    # a Symbol or a String. Mainly intended to be used with Cucumber.
     #
     # @role.on(:google)
     # @role.on('google')
@@ -41,7 +41,7 @@ module Huzzah
     private
 
     ##
-    # Merge and freeze role data from YAML and custom Hash argument
+    # Merge and freeze role data from YAML and optional Hash arguments.
     #
     def load_role_data(name, args)
       if name.is_a?(Hash)
@@ -57,6 +57,7 @@ module Huzzah
     # Merge role data from the custom Hash with the data from
     # the YAML file. Any data from the custom Hash overrides data
     # from the YAML file.
+    #
     def merge_role_args(role_data, args)
       unless args.is_a?(Hash)
         fail ArgumentError, "Expected a Hash, got #{args.first.class}"

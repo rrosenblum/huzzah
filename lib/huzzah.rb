@@ -32,20 +32,46 @@ module Huzzah
     include FileLoader
 
     attr_accessor :path, :environment, :default_driver
-    attr_accessor :sites
 
+    ##
+    # Set the path, environment & default driver.
+    #
+    # Huzzah.configure do |config|
+    #   config.path = <path to your huzzah directory>
+    #   config.environment = 'qa'
+    #   config.default_driver = 'grid_firefox'
+    # end
+    #
     def configure
       yield self if block_given?
     end
 
+    ##
+    # Returns a has of all user defined watir-webdriver drivers.
+    #
     def drivers
       @drivers ||= ActiveSupport::HashWithIndifferentAccess.new
     end
 
+    ##
+    # Defines a custom watir-webdriver driver.
+    #
+    # Example:
+    # Huzzah.define_driver(:chrome) do
+    #   Watir::Browser.new(:chrome)
+    # end
+    #
+    # You can configure the driver any way you wish, but the block
+    # must return a new Watir::Browser instance.
+    #
     def define_driver(name, &block)
       drivers[name] = block
     end
 
+    # Retrieve the configuration data for a site. Under normal circumstances, the
+    # site config is available after a Huzzah::Role is instantiated. This method
+    # provides a way to access the site config before a Huzzah::Role is instantiated.
+    #
     def site_config(site_name)
       load_config("#{Huzzah.path}/sites/#{site_name}.yml")
     end

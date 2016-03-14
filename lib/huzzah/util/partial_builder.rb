@@ -4,11 +4,11 @@ module Huzzah
     private
 
     ##
-    # Defines a method with the given name that returns an instance of
-    # a partial page class.
+    # Defines a method that returns an instance of a partial page class. The
+    # class name is used to generate the name of the method. The module
+    # namespace is ignored.
     #
-    #    include_partial(Partial::Class)
-    #    Include_partial(Google::Header)
+    #    include_partial(Google::Header)
     #
     def include_partial(partial_class)
       define_method(partial_class.to_s.demodulize.underscore.to_sym) do |&block|

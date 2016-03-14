@@ -4,6 +4,7 @@ module Huzzah
     include SiteBuilder
     include FlowBuilder
 
+    # :nodoc:
     def generate_dsl_methods!
       load_files!
       generate_site_methods!

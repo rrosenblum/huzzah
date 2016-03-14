@@ -49,13 +49,5 @@ module Huzzah
       @browser ||= Huzzah.drivers[@driver].call
     end
 
-    def browser_closed?
-      @browser.instance_variable_get('@closed')
-    end
-
-    def reset_browser
-      @browser = nil
-    end
-
   end
 end
