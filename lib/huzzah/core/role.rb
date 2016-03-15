@@ -4,8 +4,8 @@ module Huzzah
 
     def initialize(name = nil, args = {})
       @role_data = load_role_data(name, args)
-      generate_dsl_methods!
       launch_browser
+      generate_dsl_methods!
     end
 
     ##

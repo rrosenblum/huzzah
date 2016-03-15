@@ -5,8 +5,10 @@ module Huzzah
 
     attr_reader :site_name, :config
 
-    def initialize(site_name)
+    def initialize(site_name, role_data, browser)
       @site_name = site_name
+      @role_data = role_data
+      @browser = browser
       @config = load_config("#{Huzzah.path}/sites/#{@site_name}.yml")
       define_page_methods!
     end
