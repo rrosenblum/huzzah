@@ -12,9 +12,7 @@ module Huzzah
     #
     def include_partial(partial_class)
       define_method(partial_class.to_s.demodulize.underscore.to_sym) do |&block|
-        partial = partial_class.new
-        partial.role_data = @role_data
-        partial.browser = @browser
+        partial = partial_class.new(@role_data, @browser)
         partial.instance_eval(&block) if block
         partial
       end
