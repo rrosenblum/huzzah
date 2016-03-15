@@ -1,6 +1,6 @@
 module Huzzah
   class Flow < Huzzah::Base
-    include DSL
+    include EntityBuilder
 
     def initialize(role_data, browser)
       @role_data = role_data

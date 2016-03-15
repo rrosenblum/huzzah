@@ -1,6 +1,6 @@
 module Huzzah
   class Role < Huzzah::Base
-    include DSL
+    include EntityBuilder
 
     def initialize(name = nil, args = {})
       @role_data = load_role_data(name, args)
@@ -42,7 +42,10 @@ module Huzzah
     # Merge and freeze role data from YAML and optional Hash arguments.
     #
     def load_role_data(name, args)
-      args, name = name, nil if name.is_a?(Hash)
+      if name.is_a?(Hash)
+        args = name
+        name = nil
+      end
       @role_data = load_config("#{Huzzah.path}/roles/#{name}.yml")
       warn "No role data found for '#{name}'" if name && @role_data.empty?
       fail ArgumentError, "Expected a Hash, got #{args.class}" unless args.is_a?(Hash)

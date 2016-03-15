@@ -1,7 +1,6 @@
 module Huzzah
   class Site < Huzzah::Base
-    include FileLoader
-    include PageBuilder
+    include EntityBuilder
 
     attr_reader :site_name, :config
 
@@ -10,7 +9,7 @@ module Huzzah
       @role_data = role_data
       @browser = browser
       @config = load_config("#{Huzzah.path}/sites/#{@site_name}.yml")
-      define_page_methods!
+      generate_page_methods!
     end
 
     ##
