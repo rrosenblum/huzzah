@@ -21,7 +21,8 @@ module Huzzah
       #    include_partial(Google::Header)
       #
       def include_partial(partial_class)
-        define_method(partial_class.to_s.demodulize.underscore.to_sym) do |&block|
+        class_name = partial_class.to_s.demodulize.underscore.to_sym
+        define_method(class_name) do |&block|
           partial = partial_class.new(@role_data, @browser)
           partial.instance_eval(&block) if block
           partial
@@ -30,6 +31,5 @@ module Huzzah
     end
 
     def_delegators :browser, :p
-
   end
 end

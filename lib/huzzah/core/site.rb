@@ -20,7 +20,9 @@ module Huzzah
     # @role.google.on('home_page')
     #
     def on(page)
-      fail TypeError, 'Argument must be a Symbol or a String' unless page.is_a?(Symbol) || page.is_a?(String)
+      unless page.is_a?(Symbol) || page.is_a?(String)
+        fail TypeError, 'Argument must be a Symbol or a String'
+      end
       send(page)
     end
 
@@ -34,6 +36,5 @@ module Huzzah
       return if @config[:url].nil?
       @browser.goto(@config[:url])
     end
-
   end
 end

@@ -1,6 +1,5 @@
 module Huzzah
   module Locator
-
     ##
     # DSL method for creating aliases of watir-webdriver locator statements
     # within your page-objects. It will not allow duplicate aliases within
@@ -35,10 +34,13 @@ module Huzzah
     #              Defaulted to true
     #
     def validate_alias(name, restrict = true)
-      fail Huzzah::DuplicateLocatorMethodError, name if defined_aliases.include?(name)
+      if defined_aliases.include?(name)
+        fail Huzzah::DuplicateLocatorMethodError, name
+      end
       if restrict && Watir::Container.instance_methods.include?(name)
         fail Huzzah::RestrictedMethodNameError,
-             "You cannot use method names like '#{name}' from the Watir::Container module in 'locator' statements"
+             %q(You cannot use method names like '#{name}' from the
+                  Watir::Container module in 'locator' statements)
       else
         defined_aliases << name
       end
@@ -50,6 +52,5 @@ module Huzzah
     def defined_aliases
       @defined_aliases ||= []
     end
-
   end
 end

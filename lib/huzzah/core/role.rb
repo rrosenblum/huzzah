@@ -16,7 +16,9 @@ module Huzzah
     # @role.on('google')
     #
     def on(site)
-      fail TypeError, 'Argument must be a Symbol or a String' unless site.is_a?(Symbol) || site.is_a?(String)
+      unless site.is_a?(Symbol) || site.is_a?(String)
+        fail TypeError, 'Argument must be a Symbol or a String'
+      end
       send(site)
     end
 
@@ -48,9 +50,10 @@ module Huzzah
       end
       @role_data = load_config("#{Huzzah.path}/roles/#{name}.yml")
       warn "No role data found for '#{name}'" if name && @role_data.empty?
-      fail ArgumentError, "Expected a Hash, got #{args.class}" unless args.is_a?(Hash)
+      unless args.is_a?(Hash)
+        fail ArgumentError, "Expected a Hash, got #{args.class}"
+      end
       role_data.merge!(args).freeze
     end
-    
   end
 end

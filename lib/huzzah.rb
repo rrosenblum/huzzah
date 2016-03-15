@@ -12,7 +12,6 @@ require_relative 'huzzah/core/site'
 require_relative 'huzzah/core/page'
 
 module Huzzah
-
   class DriverNotDefinedError < StandardError; end
   class DuplicateMethodNameError < StandardError; end
   class DuplicateLocatorMethodError < StandardError; end
@@ -63,14 +62,14 @@ module Huzzah
       drivers[name] = block
     end
 
-    # Retrieve the configuration data for a site. Under normal circumstances, the
-    # site config is available after a Huzzah::Role is instantiated. This method
-    # provides a way to access the site config before a Huzzah::Role is instantiated.
+    # Retrieve the configuration data for a site. Under normal circumstances,
+    # the site config is available after a Huzzah::Role is instantiated. This
+    # method provides a way to access the site config before a Huzzah::Role
+    # is instantiated.
     #
     def site_config(site_name)
       load_config("#{Huzzah.path}/sites/#{site_name}.yml")
     end
-
   end
 
   Huzzah.define_driver(:firefox) do
@@ -78,5 +77,4 @@ module Huzzah
   end
 
   Huzzah.default_driver = :firefox
-
 end

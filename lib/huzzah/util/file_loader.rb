@@ -1,6 +1,5 @@
 # :nodoc:
 module FileLoader
-
   private
 
   def load_files!

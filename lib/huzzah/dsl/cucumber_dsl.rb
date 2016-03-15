@@ -1,7 +1,6 @@
 module Huzzah
   module Cucumber
     module DSL
-
       ##
       # Dynamically switch the active role. Intended to be used
       # when the role name is passed as an argument to a Cucumber
@@ -22,9 +21,10 @@ module Huzzah
       # to be used in a Cucumber hook.
       #
       def close_browsers
-        ObjectSpace.each_object(Huzzah::Role).each { |role| role.browser.close rescue NoMethodError }
+        ObjectSpace.each_object(Huzzah::Role).each do |role|
+          role.browser.close rescue NoMethodError
+        end
       end
-
     end
   end
 end

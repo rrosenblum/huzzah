@@ -3,7 +3,6 @@ module Huzzah
   module EntityBuilder
     include FileLoader
 
-    # :nodoc:
     def generate_dsl_methods!
       load_files!
       generate_site_methods!
@@ -44,13 +43,13 @@ module Huzzah
     def generate_page_methods!
       Huzzah::Page.subclasses.each do |subclass|
         next unless subclass.parent.to_s.underscore.to_sym.eql?(@site_name)
-        define_singleton_method(subclass.to_s.demodulize.underscore.to_sym) do |&block|
+        site_name = subclass.to_s.demodulize.underscore.to_sym
+        define_singleton_method(site_name) do |&block|
           page = subclass.new(@role_data, @browser)
           page.instance_eval(&block) if block_given?
           page
         end
       end
     end
-
   end
 end

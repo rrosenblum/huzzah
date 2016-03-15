@@ -8,6 +8,5 @@ module Huzzah
       generate_site_methods!
       generate_flow_methods!
     end
-
   end
 end
