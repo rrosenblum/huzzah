@@ -22,9 +22,7 @@ module Huzzah
       # to be used in a Cucumber hook.
       #
       def close_browsers
-        ObjectSpace.each_object(Huzzah::Role).each do |role|
-          role.browser.close rescue NoMethodError
-        end
+        ObjectSpace.each_object(Huzzah::Role).each { |role| role.browser.close rescue NoMethodError }
       end
 
     end

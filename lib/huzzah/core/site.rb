@@ -19,9 +19,7 @@ module Huzzah
     # @role.google.on('home_page')
     #
     def on(page)
-      unless page.is_a?(Symbol) || page.is_a?(String)
-        fail TypeError, 'You must pass a Symbol or String to the #on method'
-      end
+      fail TypeError, 'Argument must be a Symbol or a String' unless page.is_a?(Symbol) || page.is_a?(String)
       send(page)
     end
 

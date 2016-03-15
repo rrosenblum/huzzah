@@ -21,9 +21,7 @@ module Huzzah
     #
     def locator(name, &block)
       validate_alias(name)
-      define_method(name) do |*args|
-        instance_exec(*args, &block)
-      end
+      define_method(name) { |*args| instance_exec(*args, &block) }
     end
 
     private
@@ -37,12 +35,10 @@ module Huzzah
     #              Defaulted to true
     #
     def validate_alias(name, restrict = true)
-      if defined_aliases.include?(name)
-        fail Huzzah::DuplicateLocatorMethodError, name
-      elsif restrict && Watir::Container.instance_methods.include?(name)
+      fail Huzzah::DuplicateLocatorMethodError, name if defined_aliases.include?(name)
+      if restrict && Watir::Container.instance_methods.include?(name)
         fail Huzzah::RestrictedMethodNameError,
-             %(You cannot use method names like '#{name}' from
-                 the Watir::Container module in 'locator' statements)
+             "You cannot use method names like '#{name}' from the Watir::Container module in 'locator' statements"
       else
         defined_aliases << name
       end

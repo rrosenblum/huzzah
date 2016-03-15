@@ -16,9 +16,7 @@ module Huzzah
     # @role.on('google')
     #
     def on(site)
-      unless site.is_a?(Symbol) || site.is_a?(String)
-        fail TypeError, 'You must pass a Symbol or String to the #on method'
-      end
+      fail TypeError, 'Argument must be a Symbol or a String' unless site.is_a?(Symbol) || site.is_a?(String)
       send(site)
     end
 
@@ -44,26 +42,12 @@ module Huzzah
     # Merge and freeze role data from YAML and optional Hash arguments.
     #
     def load_role_data(name, args)
-      if name.is_a?(Hash)
-        args = name
-        name = nil
-      end
+      args, name = name, nil if name.is_a?(Hash)
       @role_data = load_config("#{Huzzah.path}/roles/#{name}.yml")
-      warn "No role data found for '#{name}'" if name and @role_data.empty?
-      merge_role_args(role_data, args).freeze
+      warn "No role data found for '#{name}'" if name && @role_data.empty?
+      fail ArgumentError, "Expected a Hash, got #{args.class}" unless args.is_a?(Hash)
+      role_data.merge!(args).freeze
     end
-
-    ##
-    # Merge role data from the custom Hash with the data from
-    # the YAML file. Any data from the custom Hash overrides data
-    # from the YAML file.
-    #
-    def merge_role_args(role_data, args)
-      unless args.is_a?(Hash)
-        fail ArgumentError, "Expected a Hash, got #{args.first.class}"
-      end
-      role_data.merge!(args)
-    end
-
+    
   end
 end
