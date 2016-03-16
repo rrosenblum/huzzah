@@ -3,7 +3,7 @@
 Huzzah is a role-centric test automation framework designed to the used in conjunction with Watir-WebDriver. While there are many aspects to role-based testing, it can be broken down to a few concepts:
 
 1. Test scenarios where multiple roles (or users) interact with each other.
-2. Test sceanrios that require a role with specific permissions (e.g. an admin).
+2. Test scenarios that require a role with specific permissions (e.g. an admin).
 3. Test scenarios that require a role with specific attributes (e.g. a user with a suspended account).
 
 Huzzah is designed to make this type of testing easier and more manageable. In addition role manangement, the framework implements standard features like page-objects, application flows & site configuration. 
@@ -44,6 +44,8 @@ puts @role.browser.title
 ```
 
 ## Advanced Usage
+Huzzah implements the page-object pattern, user flows and site configuration across multiple environments. For more information:
+
 Follow the [Tutorial](https://github.com/manheim/huzzah/wiki/Tutorial).
 
 Read the [Wiki](https://github.com/manheim/huzzah/wiki). 
