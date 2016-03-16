@@ -44,6 +44,8 @@ puts @role.browser.title
 ```
 
 ## Advanced Usage
+Huzzah implements the page-object pattern, user flows and site configuration across multiple environments. For more information:
+
 Follow the [Tutorial](https://github.com/manheim/huzzah/wiki/Tutorial).
 
 Read the [Wiki](https://github.com/manheim/huzzah/wiki). 
