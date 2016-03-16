@@ -66,4 +66,12 @@ describe Huzzah::Page do
     expect(@role.google.home.search_form).to respond_to(:keywords)
   end
 
+  it 'handles a block of code' do
+    @role = Huzzah::Role.new
+    @role.bing.visit
+    @role.bing.home_page do
+      search_box.set('foo')
+    end
+    expect(@role.bing.home_page.search_box.value).to eql('foo')
+  end
 end

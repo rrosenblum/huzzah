@@ -5,11 +5,6 @@ module Huzzah
     extend Locator
     extend Forwardable
 
-    def initialize(role_data, browser)
-      @role_date = role_data
-      @browser = browser
-    end
-
     class << self
       private
 
@@ -23,7 +18,9 @@ module Huzzah
       def include_partial(partial_class)
         class_name = partial_class.to_s.demodulize.underscore.to_sym
         define_method(class_name) do |&block|
-          partial = partial_class.new(@role_data, @browser)
+          partial = partial_class.new
+          partial.role_data = @role_data
+          partial.browser = @browser
           partial.instance_eval(&block) if block
           partial
         end

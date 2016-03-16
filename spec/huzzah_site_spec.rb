@@ -57,4 +57,11 @@ describe Huzzah::Site do
     expect { @role.google.on(1) }.to raise_error(TypeError)
   end
 
+  it 'handles a block of code' do
+    @role = Huzzah::Role.new
+    @role.bing.visit
+    @role.bing { home_page.search_box.set('foo') }
+    expect(@role.bing.home_page.search_box.value).to eql('foo')
+  end
+
 end

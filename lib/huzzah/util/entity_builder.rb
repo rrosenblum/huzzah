@@ -26,10 +26,15 @@ module Huzzah
       define_sites!
       sites.each_key do |site|
         define_singleton_method(site) do |&block|
-          sites[__method__.to_sym].instance_eval(&block) if block_given?
-          sites[__method__.to_sym]
+          return_site(__method__.to_sym, &block)
         end
       end
+    end
+
+    def return_site(site_name, &block)
+      site = @sites[site_name]
+      site.instance_eval(&block) if block_given?
+      site
     end
 
     def generate_flow_methods!
@@ -45,11 +50,17 @@ module Huzzah
         next unless subclass.parent.to_s.underscore.to_sym.eql?(@site_name)
         site_name = subclass.to_s.demodulize.underscore.to_sym
         define_singleton_method(site_name) do |&block|
-          page = subclass.new(@role_data, @browser)
-          page.instance_eval(&block) if block_given?
-          page
+          return_page(subclass, &block)
         end
       end
+    end
+
+    def return_page(subclass, &block)
+      page = subclass.new
+      page.role_data = @role_data
+      page.browser = @browser
+      page.instance_eval(&block) if block_given?
+      page
     end
   end
 end
