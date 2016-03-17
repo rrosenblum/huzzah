@@ -9,10 +9,11 @@ module Huzzah
       # Example:
       #   as(admin).google.home_page.search_for('Huzzah')
       #
-      def as(role_name)
+      def as(role_name, &block)
         role = instance_variable_get("@#{role_name}")
         fail Huzzah::RoleNotDefinedError unless role
         fail Huzzah::NotARoleError unless role.is_a?(Huzzah::Role)
+        role.instance_eval(&block) if block_given?
         role
       end
 

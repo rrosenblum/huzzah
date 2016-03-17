@@ -13,8 +13,8 @@ describe Huzzah::Cucumber::DSL do
   end
 
   after(:each) do
-    @role1.browser.close if @role1.browser
-    @role2.browser.close if @role2.browser
+    @role1.browser.close if @role1 && @role1.browser
+    @role2.browser.close if @role2 && @role2.browser
   end
 
   it 'dynamically switches roles' do
@@ -42,6 +42,15 @@ describe Huzzah::Cucumber::DSL do
     close_browsers
     expect(@role1.browser).not_to be_exists
     expect(@role2.browser).not_to be_exists
+  end
+
+  it 'handles a block of code' do
+    @role1 = Huzzah::Role.new
+    as(:role1) do
+      bing.visit
+      bing.home_page.search_box.set('foo')
+    end
+    expect(@role1.bing.home_page.search_box.value).to eql('foo')
   end
 
 end
