@@ -19,7 +19,7 @@ gem 'huzzah'
 gem 'watir-webdriver'
 ```
 
-NOTE: While Huzzah is designed to be used in conjunction with Watir-WebDriver, the two gems are decoupled. This also you to
+**NOTE:** While Huzzah is designed to be used in conjunction with Watir-WebDriver, the two gems are decoupled. This also you to
  choose which version of of Watir-WebDriver best suits your needs.
 
 And then execute:
