@@ -27,6 +27,7 @@ module Huzzah
       end
     end
 
-    def_delegators :browser, :p
+    def_delegator :browser, :p
+    def_delegator :browser, :select
   end
 end
