@@ -42,6 +42,97 @@ require 'huzzah'
 puts @role.browser.title
 @role.browser.close
 ```
+## Getting Started
+Let's assume huzzah library will live under lib/huzzah and we'll configure Huzzah in
+features/support/env.rb as:
+```ruby
+require 'huzzah'
+require 'watir-webdriver'
+$PROJECT_ROOT = File.expand_path(File.join(File.dirname(__FILE__), '../..'))
+
+Huzzah.configure do |config|
+  config.path = "#{PROJECT_ROOT}/lib/huzzah"
+  config.default_driver = ENV['BROWSER'] ||= 'firefox'
+  config.environment = ENV['AUTO_ENV'] ||= 'test'
+end
+```
+
+Next let's go ahead and define our sample site in
+lib/huzzah/sites/sample_site.yml with two environments
+
+```ruby
+test:
+  :url: http://localhost:1234/sample-site
+ba:
+  :url: http://ba-env/sample-site
+```
+
+Now we're ready to define the users per environment in
+lib/huzzah/roles/user.yml
+```ruby
+test:
+  :username: 'test1'
+  :password: 'password-1'
+
+ba:
+  :username: 'test2'
+  :password: 'password-2'
+```
+
+This is optional but If I wanted to define the roles in the Before hook i'd do something like this:
+```ruby
+Before do
+  @user = Huzzah::Role.new(:user) #Note: :user corresponds to lib/huzzah/roles/user.yml
+end
+```
+
+At this point we can define our test we'll use Cucumber scenario
+```ruby
+Feature: Basic Search
+  As a SampleSite basic user
+  In order to find my search results
+  I want to utilize a basic search form
+
+  Scenario: User performs basic search
+    Given I am a SampleSite basic user
+    When I perform a basic search
+    Then I should see my basic search results
+```
+
+let's define our PageObject classes in lib/huzzah/pages/search_form_page.rb:
+```ruby
+module SampleSite #Note: module name corresponds to the the name of the site i.e. sample_site and needs to be camel-cased
+  class SearchFormPage < Huzzah::Page
+    locator(:search)  { button(id: 'search_b_1')}
+  end
+end
+```
+and in lib/huzzah/pages/search_results_page.rb
+```ruby
+module SampleSite #Note: module name corresponds to the the name of the site i.e. sample_site and needs to be camel-cased
+  class SearchResultsPage < Huzzah::Page
+    locator(:toolbar_full)  { div(id: 'onesearch_toolbar_full') }
+  end
+end
+```
+
+
+with step definitions which would look like:
+```ruby
+Given(/^I am a SampleSite basic user$/) do
+  @user.visit(:sample_site) #Note: :one_search corresponds to the name of the site yml file i.e. sample_site.yml
+end
+
+When(/^I perform a basic search$/) do
+  @user.sample_site.search_form_page.search
+end
+
+Then(/^I should see my basic search results$/) do
+  expect(@user.sample_site.search_results_page.toolbar_full).to exist
+end
+```
+
+
 
 ## Advanced Usage
 Huzzah implements the page-object pattern, user flows and site configuration across multiple environments. For more information:
