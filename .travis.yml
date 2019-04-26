@@ -1,0 +1,24 @@
+language: ruby
+addons:
+  firefox: "latest"
+before_install:
+  - gem update --remote bundler
+  - wget https://github.com/mozilla/geckodriver/releases/download/v0.24.0/geckodriver-v0.24.0-linux64.tar.gz
+  - mkdir geckodriver
+  - tar -xzf geckodriver-v0.24.0-linux64.tar.gz -C geckodriver
+  - export PATH=$PATH:$PWD/geckodriver
+cache: bundler
+rvm:
+  - 2.3
+  - 2.4
+  - 2.5
+  - 2.6
+  - ruby-head
+gemfile:
+  - gemfiles/Gemfile.activesupport-4.2
+  - gemfiles/Gemfile.activesupport-5.0
+  - gemfiles/Gemfile.activesupport-5.1
+  - gemfiles/Gemfile.activesupport-5.2
+matrix:
+  allow_failures:
+    - rvm: ruby-head

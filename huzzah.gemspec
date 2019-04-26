@@ -27,7 +27,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency('rake', '~> 10.4.0')
   spec.add_development_dependency('watir', '~> 6.16.0')
 
-  spec.add_runtime_dependency('activesupport', '~>4.2')
+  spec.add_runtime_dependency('activesupport', '> 4.2.0', '< 6.0.0')
 
   spec.post_install_message = 'Huzzah!'
 end
