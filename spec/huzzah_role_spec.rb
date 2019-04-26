@@ -6,7 +6,7 @@ describe Huzzah::Role do
     Huzzah.configure do |config|
       config.path = "#{$PROJECT_ROOT}/spec/examples"
       config.environment = 'prod'
-      config.default_driver = :firefox
+      config.default_driver = :firefox_headless
     end
   end
 
@@ -70,7 +70,7 @@ describe Huzzah::Role do
 
   it 'initializes the browser to a custom driver when specified' do
     Huzzah.define_driver(:custom_firefox) do
-      Watir::Browser.new(:firefox)
+      Watir::Browser.new(:firefox, headless: true)
     end
     @role = Huzzah::Role.new('custom_user').visit(:google)
     expect(@role.driver).to eql('custom_firefox')

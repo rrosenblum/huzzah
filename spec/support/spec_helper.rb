@@ -8,3 +8,6 @@ SimpleCov.start do
   add_filter('/spec/')
 end
 require 'huzzah'
+Huzzah.define_driver(:firefox_headless) do
+  Watir::Browser.new(:firefox, headless: true)
+end
