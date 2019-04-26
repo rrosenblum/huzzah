@@ -1,7 +1,7 @@
 require 'rubygems'
-require 'bundler'
-require 'bundler/gem_tasks'
 begin
+  require 'bundler'
+  require 'bundler/gem_tasks'
   Bundler.setup(:default, :development)
 rescue Bundler::BundlerError => e
   $stderr.puts e.message
