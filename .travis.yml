@@ -15,9 +15,6 @@ rvm:
   - 2.6
   - ruby-head
 gemfile:
-  - gemfiles/Gemfile.activesupport-4.2
-  - gemfiles/Gemfile.activesupport-5.0
-  - gemfiles/Gemfile.activesupport-5.1
   - gemfiles/Gemfile.activesupport-5.2
 matrix:
   allow_failures:
