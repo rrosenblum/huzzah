@@ -21,7 +21,7 @@ Gem::Specification.new do |spec|
   spec.test_files = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ['lib']
 
-  spec.add_development_dependency('rspec', '~> 3.2.0')
+  spec.add_development_dependency('rspec', '~> 3.8.0')
   spec.add_development_dependency('pry', '~> 0.10.1')
   spec.add_development_dependency('simplecov', '~>  0.10.0')
   spec.add_development_dependency('rake', '~> 10.4.0')
