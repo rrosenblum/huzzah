@@ -23,7 +23,7 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency('rspec', '~> 3.8.0')
   spec.add_development_dependency('pry', '~> 0.10.1')
-  spec.add_development_dependency('simplecov', '~>  0.10.0')
+  spec.add_development_dependency('simplecov', '~>  0.16.0')
   spec.add_development_dependency('rake', '~> 12.0')
   spec.add_development_dependency('watir', '~> 6.16.0')
 
