@@ -1,6 +1,6 @@
 require 'support/spec_helper'
 
-describe Huzzah::Page do
+RSpec.describe Huzzah::Page do
 
   before(:each) do
     Huzzah.configure do |config|

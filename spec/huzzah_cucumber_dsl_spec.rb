@@ -1,6 +1,6 @@
 require_relative 'support/spec_helper'
 
-describe Huzzah::Cucumber::DSL do
+RSpec.describe Huzzah::Cucumber::DSL do
 
   include Huzzah::Cucumber::DSL
 

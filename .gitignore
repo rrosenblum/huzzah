@@ -6,3 +6,4 @@ report.html*.swp
 *.swo
 grid.txt
 .DS_Store
+spec/examples.txt

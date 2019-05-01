@@ -1,6 +1,6 @@
 require 'support/spec_helper'
 
-describe Huzzah::Flow do
+RSpec.describe Huzzah::Flow do
 
   before(:each) do
     Huzzah.configure do |config|

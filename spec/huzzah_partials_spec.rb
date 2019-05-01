@@ -1,6 +1,6 @@
 require 'support/spec_helper'
 
-describe 'Partials' do
+RSpec.describe 'Partials' do
 
   before(:each) do
     Huzzah.configure do |config|
