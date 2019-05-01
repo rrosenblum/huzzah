@@ -25,6 +25,7 @@ RSpec.describe Huzzah::Page do
   end
 
   it "allows adding 'locator' statements" do
+    Huzzah::Role.new
     Google::Home.locator(:foo) { div(id: 'foo') }
     expect(Google::Home.instance_methods).to include(:foo)
   end
@@ -42,6 +43,7 @@ RSpec.describe Huzzah::Page do
   end
 
   it "does not allow 'locator' method name from the Watir::Container module" do
+    Huzzah::Role.new
     expect { Google::Home.locator(:table) { div(id: 'main') }
     }.to raise_error(Huzzah::RestrictedMethodNameError)
   end
