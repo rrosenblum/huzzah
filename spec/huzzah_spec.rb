@@ -1,12 +1,12 @@
 require 'support/spec_helper'
 
-describe Huzzah do
+RSpec.describe Huzzah do
 
   before(:each) do
     Huzzah.configure do |config|
       config.path = "#{$PROJECT_ROOT}/spec/examples"
       config.environment = 'prod'
-      config.default_driver = :firefox
+      config.default_driver = :firefox_headless
     end
   end
 

@@ -21,14 +21,13 @@ Gem::Specification.new do |spec|
   spec.test_files = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ['lib']
 
-  spec.add_development_dependency('bundler', '~> 1.5')
-  spec.add_development_dependency('rspec', '~> 3.2.0')
+  spec.add_development_dependency('rspec', '~> 3.8.0')
   spec.add_development_dependency('pry', '~> 0.10.1')
-  spec.add_development_dependency('simplecov', '~>  0.10.0')
-  spec.add_development_dependency('rake', '~> 10.4.0')
-  spec.add_development_dependency('watir-webdriver', '0.9.1')
+  spec.add_development_dependency('simplecov', '~>  0.16.0')
+  spec.add_development_dependency('rake', '~> 12.0')
+  spec.add_development_dependency('watir', '~> 6.16.0')
 
-  spec.add_runtime_dependency('activesupport', '~>4.2')
+  spec.add_runtime_dependency('activesupport', '> 4.2.0', '< 6.0.0')
 
   spec.post_install_message = 'Huzzah!'
 end

@@ -1,12 +1,12 @@
 require 'support/spec_helper'
 
-describe Huzzah::Page do
+RSpec.describe Huzzah::Page do
 
   before(:each) do
     Huzzah.configure do |config|
       config.path = "#{$PROJECT_ROOT}/spec/examples"
       config.environment = 'prod'
-      config.default_driver = :firefox
+      config.default_driver = :firefox_headless
     end
   end
 
@@ -25,6 +25,7 @@ describe Huzzah::Page do
   end
 
   it "allows adding 'locator' statements" do
+    Huzzah::Role.new
     Google::Home.locator(:foo) { div(id: 'foo') }
     expect(Google::Home.instance_methods).to include(:foo)
   end
@@ -42,6 +43,7 @@ describe Huzzah::Page do
   end
 
   it "does not allow 'locator' method name from the Watir::Container module" do
+    Huzzah::Role.new
     expect { Google::Home.locator(:table) { div(id: 'main') }
     }.to raise_error(Huzzah::RestrictedMethodNameError)
   end
@@ -51,12 +53,12 @@ describe Huzzah::Page do
     expect(@role.google.home.browser).to be_a(Watir::Browser)
   end
 
-  it "wraps watir-webdriver 'browser' methods" do
+  it "wraps watir 'browser' methods" do
     @role = Huzzah::Role.new(:standard_user).visit(:google)
     expect(@role.google.home.title).to eql('Google')
   end
 
-  it "wraps watir-webdriver 'container' methods" do
+  it "wraps watir 'container' methods" do
     @role = Huzzah::Role.new(:standard_user).visit(:google)
     expect(@role.google.home.button(name: 'btnK').value).to eql('Google Search')
   end

@@ -1,6 +1,6 @@
 require_relative 'support/spec_helper'
 
-describe Huzzah::Cucumber::DSL do
+RSpec.describe Huzzah::Cucumber::DSL do
 
   include Huzzah::Cucumber::DSL
 
@@ -8,7 +8,7 @@ describe Huzzah::Cucumber::DSL do
     Huzzah.configure do |config|
       config.path = "#{$PROJECT_ROOT}/spec/examples"
       config.environment = 'prod'
-      config.default_driver = :firefox
+      config.default_driver = :firefox_headless
     end
   end
 

@@ -41,14 +41,14 @@ module Huzzah
     end
 
     ##
-    # Returns a has of all user defined watir-webdriver drivers.
+    # Returns a has of all user defined watir drivers.
     #
     def drivers
       @drivers ||= ActiveSupport::HashWithIndifferentAccess.new
     end
 
     ##
-    # Defines a custom watir-webdriver driver.
+    # Defines a custom watir driver.
     #
     # Example:
     # Huzzah.define_driver(:chrome) do

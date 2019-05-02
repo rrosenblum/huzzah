@@ -1,7 +1,7 @@
 module Huzzah
   module Locator
     ##
-    # DSL method for creating aliases of watir-webdriver locator statements
+    # DSL method for creating aliases of watir locator statements
     # within your page-objects. It will not allow duplicate aliases within
     # the same page-object and will not allow a name that conflicts with
     # a Watir::Container method name.
