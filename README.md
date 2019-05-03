@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/manheim/huzzah.svg?branch=master)](https://travis-ci.com/manheim/huzzah)
+
 # Huzzah
 
 Huzzah is a role-centric test automation framework designed to the used in conjunction with Watir. While there are many aspects to role-based testing, it can be broken down to a few concepts:
