@@ -17,12 +17,17 @@ module Huzzah
       #
       def include_partial(partial_class)
         class_name = partial_class.to_s.demodulize.underscore.to_sym
+        instance_name = "@#{class_name}"
+
         define_method(class_name) do |&block|
-          partial = partial_class.new
-          partial.role_data = @role_data
-          partial.browser = @browser
-          partial.instance_eval(&block) if block
-          partial
+          instance_variable_get(instance_name) ||
+            begin
+              partial = partial_class.new
+              partial.role_data = @role_data
+              partial.browser = @browser
+              partial.instance_eval(&block) if block
+              instance_variable_set(instance_name, partial)
+            end
         end
       end
     end
